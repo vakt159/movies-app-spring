@@ -1,6 +1,8 @@
-package com.moviesdb.moviesdb.services.actor;
+package com.moviesdb.moviesdb.services.human;
 
 import com.moviesdb.moviesdb.models.Actor;
+import com.moviesdb.moviesdb.models.Director;
+import com.moviesdb.moviesdb.models.superclasses.HumanBaseEntity;
 import com.moviesdb.moviesdb.persistence.ActorDAO;
 import org.springframework.stereotype.Service;
 
@@ -8,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ActorServiceImpl implements ActorService {
+public class ActorServiceImpl implements HumanService{
     private final ActorDAO actorDAO;
 
     public ActorServiceImpl(ActorDAO actorDAO) {
@@ -38,7 +40,6 @@ public class ActorServiceImpl implements ActorService {
         return actorDAO.save(actor);
     }
 
-    @Override
     public Actor findActorByFirstNameAndLastName(String firstName, String lastName)
     {
         Actor foundActor = actorDAO.findActorByFirstNameAndLastName(firstName, lastName);
