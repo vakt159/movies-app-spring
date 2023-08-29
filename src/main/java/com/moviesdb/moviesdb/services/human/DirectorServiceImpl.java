@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class DirectorServiceImpl implements HumanService {
+public class DirectorServiceImpl implements HumanService<Director> {
     private final DirectorDAO directorDAO;
 
     public DirectorServiceImpl(DirectorDAO directorDAO) {

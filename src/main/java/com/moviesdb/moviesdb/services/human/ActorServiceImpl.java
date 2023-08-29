@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ActorServiceImpl implements HumanService{
+public class ActorServiceImpl implements HumanService<Actor>{
     private final ActorDAO actorDAO;
 
     public ActorServiceImpl(ActorDAO actorDAO) {
