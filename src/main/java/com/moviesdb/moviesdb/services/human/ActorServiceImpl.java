@@ -39,6 +39,13 @@ public class ActorServiceImpl implements HumanService<Actor>{
         return actorDAO.save(actor);
     }
 
+    @Override
+    public Actor deleteById(Long id) {
+        Actor deleteActor = findById(id);
+        actorDAO.deleteById(id);
+        return deleteActor;
+    }
+
     public Actor findActorByFirstNameAndLastName(String firstName, String lastName)
     {
         Actor foundActor = actorDAO.findActorByFirstNameAndLastName(firstName, lastName);

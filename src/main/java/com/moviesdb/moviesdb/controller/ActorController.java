@@ -3,10 +3,7 @@ package com.moviesdb.moviesdb.controller;
 import com.moviesdb.moviesdb.models.Actor;
 import com.moviesdb.moviesdb.services.human.ActorServiceImpl;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,9 +21,25 @@ public class ActorController {
     {
         return actorService.findAll();
     }
+
+    @GetMapping("/{id}")
+    public @ResponseBody Actor getActor(@PathVariable Long id) {
+        return actorService.findById(id);
+    }
+    @PostMapping()
+    public @ResponseBody Actor saveActor(@RequestBody Actor actor) {
+        return actorService.save(actor);
+    }
+
     @GetMapping("/find")
     public @ResponseBody Actor findByFirstLastName(@RequestBody String firstName,String lastName)
     {
         return actorService.findActorByFirstNameAndLastName(firstName,lastName);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public @ResponseBody Actor deleteById(@PathVariable Long id)
+    {
+        return actorService.deleteById(id);
     }
 }
