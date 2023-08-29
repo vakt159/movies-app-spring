@@ -1,6 +1,7 @@
-package com.moviesdb.moviesdb.services.director;
+package com.moviesdb.moviesdb.services.human;
 
 import com.moviesdb.moviesdb.models.Director;
+import com.moviesdb.moviesdb.models.superclasses.HumanBaseEntity;
 import com.moviesdb.moviesdb.persistence.DirectorDAO;
 import org.springframework.stereotype.Service;
 
@@ -8,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class DirectorServiceImpl implements DirectorService {
+public class DirectorServiceImpl implements HumanService<Director> {
     private final DirectorDAO directorDAO;
 
     public DirectorServiceImpl(DirectorDAO directorDAO) {
@@ -37,8 +38,7 @@ public class DirectorServiceImpl implements DirectorService {
         return directorDAO.save(director);
     }
 
-    @Override
-    public Director findDirectorByFirstNameAndLastName(String firstName, String lastName)
+    public HumanBaseEntity findDirectorByFirstNameAndLastName(String firstName, String lastName)
     {
         Director foundDirector = directorDAO.findDirectorByFirstNameAndLastName(firstName, lastName);
         if(foundDirector==null)

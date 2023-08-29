@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface ActorDAO extends JpaRepository<Actor,Long> {
     // Not working
-    Actor findActorByFirstnameAndLastname(String firstName,String lastName);
+    Actor findActorByFirstNameAndLastName(String firstName,String lastName);
 }
