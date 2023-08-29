@@ -1,4 +1,4 @@
-package com.moviesdb.moviesdb.model.superclasses;
+package com.moviesdb.moviesdb.models.superclasses;
 
 
 import jakarta.persistence.*;

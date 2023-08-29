@@ -1,6 +1,6 @@
-package com.moviesdb.moviesdb.model;
+package com.moviesdb.moviesdb.models;
 
-import com.moviesdb.moviesdb.model.superclasses.NonHumanBaseEntity;
+import com.moviesdb.moviesdb.models.superclasses.NonHumanBaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
 import lombok.Data;

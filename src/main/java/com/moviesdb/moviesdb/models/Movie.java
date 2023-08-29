@@ -1,6 +1,6 @@
-package com.moviesdb.moviesdb.model;
+package com.moviesdb.moviesdb.models;
 
-import com.moviesdb.moviesdb.model.superclasses.WatchableBaseEntity;
+import com.moviesdb.moviesdb.models.superclasses.WatchableBaseEntity;
 import jakarta.persistence.*;
 import lombok.Data;
 
