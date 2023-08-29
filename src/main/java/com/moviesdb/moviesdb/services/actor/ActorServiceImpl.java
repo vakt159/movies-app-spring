@@ -41,7 +41,7 @@ public class ActorServiceImpl implements ActorService {
     @Override
     public Actor findActorByFirstNameAndLastName(String firstName, String lastName)
     {
-        Actor foundActor = actorDAO.findActorByFirstNameAndLastName(firstName, lastName);
+        Actor foundActor = actorDAO.findActorByFirstnameAndLastname(firstName, lastName);
         if(foundActor==null)
             throw new RuntimeException("Actor doesn't exist");
         return foundActor;

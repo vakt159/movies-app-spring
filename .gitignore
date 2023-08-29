@@ -1,5 +1,6 @@
 HELP.md
-target/
+application.properties
+target/q
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
@@ -32,4 +33,3 @@ build/
 ### VS Code ###
 .vscode/
 
-application.properties
