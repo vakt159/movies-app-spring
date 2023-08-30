@@ -94,13 +94,13 @@ public class MovieServiceImpl implements WatchableService<Movie> {
             movieToUpdate.setDistributors(distributors);
 
             Movie movieToDelete = null;
-            Set<Movie> movies = distributorToDelete.getMovie();
+            Set<Movie> movies = distributorToDelete.getMovies();
             for (Movie movie : movies)
                 if (movie.getId() == movieId) {
                     movieToDelete = movie;
-                    distributorToDelete.getMovie().remove(movieToDelete);
+                    distributorToDelete.getMovies().remove(movieToDelete);
                 }
-            distributorToDelete.setMovie(movies);
+            distributorToDelete.setMovies(movies);
             movieDAO.save(movieToUpdate);
             distributorDAO.save(distributorToDelete);
         }
