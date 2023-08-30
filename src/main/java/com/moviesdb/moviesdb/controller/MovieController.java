@@ -19,7 +19,7 @@ public class MovieController {
     private final WatchableService movieService;
 
     public MovieController(    @Qualifier("movieServiceImpl")
-                               MovieServiceImpl movieService) {
+                               WatchableService movieService) {
         this.movieService = movieService;
     }
 
