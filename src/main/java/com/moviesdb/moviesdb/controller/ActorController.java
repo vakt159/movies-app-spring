@@ -2,13 +2,17 @@ package com.moviesdb.moviesdb.controller;
 
 import com.moviesdb.moviesdb.models.Actor;
 import com.moviesdb.moviesdb.services.human.ActorServiceImpl;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+
+import org.springframework.http.HttpStatus;
 
 @Controller
-@RequestMapping({"/actor","actor"})
+@RequestMapping({"/actor", "actor"})
 public class ActorController {
     private final ActorServiceImpl actorService;
 
@@ -17,29 +21,42 @@ public class ActorController {
     }
 
     @GetMapping("/all")
-    public @ResponseBody List<Actor> getAll()
-    {
+    public @ResponseBody List<Actor> getAll() {
         return actorService.findAll();
     }
 
     @GetMapping("/{id}")
     public @ResponseBody Actor getActor(@PathVariable Long id) {
-        return actorService.findById(id);
+        Actor actor = actorService.findById(id);
+        if (actor == null) {
+            throw new NoSuchElementException("Actor with id = " + id + " does not exist");
+        } else {
+            return actor;
+        }
     }
+
     @PostMapping()
     public @ResponseBody Actor saveActor(@RequestBody Actor actor) {
         return actorService.save(actor);
     }
 
     @GetMapping("/find")
-    public @ResponseBody Actor findByFirstLastName(@RequestBody String firstName,String lastName)
-    {
-        return actorService.findActorByFirstNameAndLastName(firstName,lastName);
+    public @ResponseBody Actor findByFirstLastName(@RequestBody String firstName, String lastName) {
+        Actor actor = actorService.findActorByFirstNameAndLastName(firstName, lastName);
+        if (actor == null) {
+            throw new NoSuchElementException("Actor with first name = " + firstName + "and last name = " + lastName + " does not exist");
+        } else {
+            return actorService.findActorByFirstNameAndLastName(firstName, lastName);
+        }
     }
 
     @DeleteMapping("/delete/{id}")
-    public @ResponseBody Actor deleteById(@PathVariable Long id)
-    {
-        return actorService.deleteById(id);
+    public @ResponseBody void deleteById(@PathVariable Long id) {
+        actorService.deleteById(id);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<String> ActorException(NoSuchElementException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 }

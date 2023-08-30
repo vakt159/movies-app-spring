@@ -1,11 +1,14 @@
 package com.moviesdb.moviesdb.services.human;
 
+import com.moviesdb.moviesdb.models.Movie;
+import com.moviesdb.moviesdb.models.TVShow;
 import com.moviesdb.moviesdb.persistence.ActorDAO;
 import com.moviesdb.moviesdb.models.Actor;
 
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -40,10 +43,28 @@ public class ActorServiceImpl implements HumanService<Actor>{
     }
 
     @Override
-    public Actor deleteById(Long id) {
+    public void deleteById(Long id) {
         Actor deleteActor = findById(id);
-        actorDAO.deleteById(id);
-        return deleteActor;
+        if (deleteActor == null){
+            throw new NoSuchElementException("Actor with id = " + id + " does not exist");
+        } else {
+            for (Movie movie : deleteActor.getMovies()){
+                movie.getActors().remove(deleteActor);
+            }
+            for (TVShow tvShow : deleteActor.getTvShows()){
+                tvShow.getActors().remove(deleteActor);
+            }
+            ///??????
+            for (Movie movie : deleteActor.getMovies()){
+                movie.getActors().remove(deleteActor);
+            }
+            for (TVShow tvShow : deleteActor.getTvShows()){
+                tvShow.getActors().remove(deleteActor);
+            }
+            ///??????
+            actorDAO.deleteById(id);
+            actorDAO.flush();
+        }
     }
 
     public Actor findActorByFirstNameAndLastName(String firstName, String lastName)
