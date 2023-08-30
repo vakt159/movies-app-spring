@@ -9,4 +9,6 @@ public interface WatchableService <T extends WatchableBaseEntity> {
     List<T> findAll();
     T save(T watchable);
     T update(T watchable, Long id);
+
+    void deleteById(Long id);
 }

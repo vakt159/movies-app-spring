@@ -2,10 +2,12 @@ package com.moviesdb.moviesdb.services.watchable;
 
 import com.moviesdb.moviesdb.models.TVShow;
 import com.moviesdb.moviesdb.persistence.TVShowDAO;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class TVShowServiceImpl implements WatchableService<TVShow> {
     private final TVShowDAO tvShowDAO;
 
@@ -39,4 +41,11 @@ public class TVShowServiceImpl implements WatchableService<TVShow> {
     public TVShow update(TVShow watchable, Long id) {
         return null;
     }
+
+    @Override
+    public void deleteById(Long id) {
+
+    }
+
+
 }

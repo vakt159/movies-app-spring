@@ -69,4 +69,9 @@ public class MovieServiceImpl implements WatchableService<Movie> {
         return null;
     }
 
+    @Override
+    public void deleteById(Long id) {
+
+    }
+
 }
