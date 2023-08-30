@@ -3,17 +3,19 @@ package com.moviesdb.moviesdb.services.watchable;
 import com.moviesdb.moviesdb.models.Actor;
 import com.moviesdb.moviesdb.models.Distributor;
 import com.moviesdb.moviesdb.models.Movie;
+import com.moviesdb.moviesdb.models.superclasses.WatchableBaseEntity;
 import com.moviesdb.moviesdb.persistence.ActorDAO;
 import com.moviesdb.moviesdb.persistence.DistributorDAO;
 import com.moviesdb.moviesdb.persistence.MovieDAO;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 @Service
-public class MovieServiceImpl implements WatchableService<Movie> {
+public class MovieServiceImpl implements WatchableService {
     private final MovieDAO movieDAO;
     private final ActorDAO actorDAO;
     private final DistributorDAO distributorDAO;
@@ -32,23 +34,25 @@ public class MovieServiceImpl implements WatchableService<Movie> {
         return movieOptional.orElse(null);
     }
     @Override
-    public List<Movie> findAll() {
-        List<Movie> movies= movieDAO.findAll();
-        if(movies.isEmpty()||movies==null)
-            return null;
-        return movies;
+    public List<WatchableBaseEntity> findAll() {
+        List<Movie> movies = movieDAO.findAll();
+        if (movies == null || movies.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<WatchableBaseEntity> watchableMovies = new ArrayList<>(movies);
+        return watchableMovies;
     }
 
     @Override
-    public Movie save(Movie movie) {
+    public WatchableBaseEntity save(WatchableBaseEntity movie) {
         if(movie==null)
             throw new RuntimeException("Movie doesn't exist");
-        return movieDAO.save(movie);
+        return movieDAO.save((Movie) movie);
     }
 
-
     @Override
-    public Movie update(Movie movie, Long id) {
+    public WatchableBaseEntity update(WatchableBaseEntity watchableBaseEntity, Long id) {
+        Movie movie=(Movie)watchableBaseEntity;
         if (movie == null || id == null)
             throw new RuntimeException("Movie or id can't be null");
         if (movie.getDirector() == null)
@@ -94,13 +98,13 @@ public class MovieServiceImpl implements WatchableService<Movie> {
             movieToUpdate.setDistributors(distributors);
 
             Movie movieToDelete = null;
-            Set<Movie> movies = distributorToDelete.getMovie();
+            Set<Movie> movies = distributorToDelete.getMovies();
             for (Movie movie : movies)
                 if (movie.getId() == movieId) {
                     movieToDelete = movie;
-                    distributorToDelete.getMovie().remove(movieToDelete);
+                    distributorToDelete.getMovies().remove(movieToDelete);
                 }
-            distributorToDelete.setMovie(movies);
+            distributorToDelete.setMovies(movies);
             movieDAO.save(movieToUpdate);
             distributorDAO.save(distributorToDelete);
         }

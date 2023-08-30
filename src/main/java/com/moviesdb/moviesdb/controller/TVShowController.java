@@ -1,7 +1,9 @@
 package com.moviesdb.moviesdb.controller;
 
 import com.moviesdb.moviesdb.models.TVShow;
-import com.moviesdb.moviesdb.services.watchable.TVShowServiceImpl;
+import com.moviesdb.moviesdb.models.superclasses.WatchableBaseEntity;
+import com.moviesdb.moviesdb.services.watchable.WatchableService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -13,30 +15,30 @@ import java.util.NoSuchElementException;
 @Controller
 @RequestMapping({"/tvShow", "tvShow"})
 public class TVShowController {
-    private final TVShowServiceImpl tvShowService;
 
-    public TVShowController(TVShowServiceImpl tvShowService) {
-        this.tvShowService = tvShowService;
+    private final WatchableService tvShowService;
+    public TVShowController(@Qualifier("TVShowServiceImpl")
+                                 WatchableService twShowService) {
+        this.tvShowService = twShowService;
     }
 
     @GetMapping("/all")
-    public @ResponseBody List<TVShow> getAll() {
+    public @ResponseBody List<WatchableBaseEntity> getAll() {
         return tvShowService.findAll();
     }
 
     @GetMapping("/{id}")
     public @ResponseBody TVShow getTvShowService(@PathVariable Long id) {
-        TVShow tvShow = tvShowService.findById(id);
+        TVShow tvShow = (TVShow) tvShowService.findById(id);
         if (tvShow == null) {
             throw new NoSuchElementException("TV show with id = " + id + " does not exist");
         } else {
             return tvShow;
         }
     }
-
     @PostMapping()
     public @ResponseBody TVShow saveTVShow(@RequestBody TVShow tvShow) {
-        return tvShowService.save(tvShow);
+        return (TVShow) tvShowService.save(tvShow);
     }
 
     @DeleteMapping("/delete/{id}")

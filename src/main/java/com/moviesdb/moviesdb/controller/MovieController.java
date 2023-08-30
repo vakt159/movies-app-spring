@@ -1,8 +1,10 @@
 package com.moviesdb.moviesdb.controller;
 
-import com.moviesdb.moviesdb.models.Actor;
 import com.moviesdb.moviesdb.models.Movie;
+import com.moviesdb.moviesdb.models.superclasses.WatchableBaseEntity;
 import com.moviesdb.moviesdb.services.watchable.MovieServiceImpl;
+import com.moviesdb.moviesdb.services.watchable.WatchableService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,20 +16,21 @@ import java.util.NoSuchElementException;
 @Controller
 @RequestMapping({"/movie", "movie"})
 public class MovieController {
-    private final MovieServiceImpl movieService;
+    private final WatchableService movieService;
 
-    public MovieController(MovieServiceImpl movieService) {
+    public MovieController(    @Qualifier("movieServiceImpl")
+                               MovieServiceImpl movieService) {
         this.movieService = movieService;
     }
 
     @GetMapping("/all")
-    public @ResponseBody List<Movie> getAll() {
+    public @ResponseBody List<WatchableBaseEntity> getAll() {
         return movieService.findAll();
     }
 
     @GetMapping("/{id}")
     public @ResponseBody Movie getMovie(@PathVariable Long id) {
-        Movie movie = movieService.findById(id);
+        Movie movie = (Movie) movieService.findById(id);
         if (movie == null) {
             throw new NoSuchElementException("Movie with id = " + id + " does not exist");
         } else {
@@ -36,7 +39,8 @@ public class MovieController {
     }
     @PostMapping
     public @ResponseBody Movie saveMovie(@RequestBody Movie movie) {
-        return movieService.save(movie);
+
+        return (Movie) movieService.save(movie);
     }
 
     @DeleteMapping("/delete/{id}")
