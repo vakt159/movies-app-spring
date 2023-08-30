@@ -29,6 +29,11 @@ public class TVShowServiceImpl implements WatchableService<TVShow> {
     }
 
     @Override
+    public void deleteById(Long id) {
+
+    }
+
+    @Override
     public TVShow save(TVShow tvShow) {
         if(tvShow==null)
             throw new RuntimeException("TVShow doesn't exist");
@@ -38,5 +43,15 @@ public class TVShowServiceImpl implements WatchableService<TVShow> {
     @Override
     public TVShow update(TVShow watchable, Long id) {
         return null;
+    }
+
+    @Override
+    public void deleteDistributor(Long watchableId, Long distributorID) {
+
+    }
+
+    @Override
+    public void deleteActor(Long watchableId, Long actorId) {
+
     }
 }
