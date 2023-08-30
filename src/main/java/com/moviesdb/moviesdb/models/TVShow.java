@@ -24,7 +24,7 @@ public class TVShow extends WatchableBaseEntity {
     private int totalSeasons;
 
     @ManyToOne
-    @JoinColumn(name = "director_id",nullable = false)
+    @JoinColumn(name = "director_id",nullable = true)
     private Director director;
 
     @ManyToMany

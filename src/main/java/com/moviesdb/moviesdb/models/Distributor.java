@@ -12,7 +12,7 @@ import java.util.Set;
 public class Distributor extends NonHumanBaseEntity {
 
     @ManyToMany(mappedBy = "distributors")
-    private Set<Movie> movie;
+    private Set<Movie> movies;
 
     @ManyToMany(mappedBy = "distributors")
     private Set<TVShow> tvShows;
