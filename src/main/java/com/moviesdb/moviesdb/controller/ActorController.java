@@ -35,7 +35,7 @@ public class ActorController {
         }
     }
 
-    @PostMapping()
+    @PostMapping
     public @ResponseBody Actor saveActor(@RequestBody Actor actor) {
         return actorService.save(actor);
     }
@@ -53,6 +53,21 @@ public class ActorController {
     @DeleteMapping("/delete/{id}")
     public @ResponseBody void deleteById(@PathVariable Long id) {
         actorService.deleteById(id);
+    }
+    @PutMapping("{id}/update")
+    public @ResponseBody Actor updateById(@RequestBody Actor actor,@PathVariable Long id)
+    {
+        return actorService.update(actor, id);
+    }
+
+    @DeleteMapping("{actorId}/delete/tvShow/{tvShowId}")
+    public @ResponseBody void deleteTVShow(@PathVariable Long actorId, @PathVariable Long tvShowId){
+        actorService.deleteTVShowFromActor(actorId,tvShowId);
+    }
+
+    @PutMapping("{actorId}/save/tvShow/{tvShowId}")
+    public @ResponseBody Actor saveTVShowToActor(@PathVariable Long actorId, @PathVariable Long tvShowId){
+        return actorService.saveTVShowToActor(actorId,tvShowId);
     }
 
     @ExceptionHandler

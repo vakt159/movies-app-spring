@@ -42,6 +42,11 @@ public class DirectorServiceImpl implements HumanService<Director> {
     public void deleteById(Long id) {
     }
 
+    @Override
+    public Director update(Director director, Long id) {
+        return null;
+    }
+
     public HumanBaseEntity findDirectorByFirstNameAndLastName(String firstName, String lastName)
     {
         Director foundDirector = directorDAO.findDirectorByFirstNameAndLastName(firstName, lastName);

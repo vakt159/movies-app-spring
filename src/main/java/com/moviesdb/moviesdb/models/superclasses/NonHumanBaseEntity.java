@@ -1,10 +1,13 @@
 package com.moviesdb.moviesdb.models.superclasses;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 @MappedSuperclass
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class NonHumanBaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

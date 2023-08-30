@@ -10,4 +10,5 @@ public interface HumanService<T extends HumanBaseEntity> {
     List<T> findAll();
     T save(T human);
     void deleteById(Long id);
+    T update(T human, Long id);
 }
