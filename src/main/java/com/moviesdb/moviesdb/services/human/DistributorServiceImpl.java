@@ -114,30 +114,32 @@ public class DistributorServiceImpl  implements DistributorService{
     }
 
     @Override
-    public void addTVShow(TVShow tvShow, Long id) {
-        Distributor distributor= distributorDAO.findById(id).get();
-        Optional<TVShow> opTvShow = tvShowDAO.findById(tvShow.getId());
+    public void addTVShow(Long tvShowId, Long distributorId) {
+        Distributor distributor= distributorDAO.findById(distributorId).get();
+        Optional<TVShow> opTvShow = tvShowDAO.findById(tvShowId);
 
         if(opTvShow.isPresent()){
             distributor.getTvShows().add(opTvShow.get());
             distributorDAO.save(distributor);
+            opTvShow.get().getDistributors().add(distributor);
+            tvShowDAO.save(opTvShow.get());
         }else{
-            distributor.getTvShows().add(tvShowDAO.save(tvShow));
-            distributorDAO.save(distributor);
+            throw new NoSuchElementException("TVShow with id = " + tvShowId + " was not found");
         }
     }
 
     @Override
-    public void addMovie(Movie movie, Long id) {
-        Distributor distributor= distributorDAO.findById(id).get();
-        Optional<Movie> opMovie = movieDAO.findById(movie.getId());
+    public void addMovie(Long movieId, Long distributorId) {
+        Distributor distributor= distributorDAO.findById(distributorId).get();
+        Optional<Movie> opMovie = movieDAO.findById(movieId);
 
         if(opMovie.isPresent()){
             distributor.getMovies().add(opMovie.get());
             distributorDAO.save(distributor);
+            opMovie.get().getDistributors().add(distributor);
+            movieDAO.save(opMovie.get());
         }else{
-            distributor.getMovies().add(movieDAO.save(movie));
-            distributorDAO.save(distributor);
+            throw new NoSuchElementException("Movie with id = " + movieId + " was not found");
         }
     }
 

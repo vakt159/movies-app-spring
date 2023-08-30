@@ -2,12 +2,15 @@ package com.moviesdb.moviesdb.models;
 
 import com.moviesdb.moviesdb.models.superclasses.HumanBaseEntity;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.util.Set;
 
 @Entity
-@Data
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name =  "directors")
 public class Director extends HumanBaseEntity {
 

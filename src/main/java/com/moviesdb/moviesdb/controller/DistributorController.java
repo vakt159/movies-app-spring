@@ -54,22 +54,22 @@ public class DistributorController {
         return distributorService.update(id,distributor);
     }
 
-    @PutMapping("/{id}/add/movie")
-    public void addMovie(@RequestBody Movie movie, @PathVariable Long id){
-        distributorService.addMovie(movie, id);
+    @PutMapping("/{distributorId}/add/movie/{movieId}")
+    public @ResponseBody void addMovie(@PathVariable Long movieId, @PathVariable Long distributorId){
+        distributorService.addMovie(movieId, distributorId);
     };
 
-    @PutMapping("/{id}/add/TVShow")
-    public void addTVShow(@RequestBody TVShow tvShow, @PathVariable Long id){
-        distributorService.addTVShow(tvShow, id);
+    @PutMapping("/{distributorId}/add/TVShow/{tvShowId}")
+    public @ResponseBody void addTVShow(@PathVariable Long tvShowId, @PathVariable Long distributorId){
+        distributorService.addTVShow(tvShowId, distributorId);
     };
 
     @PutMapping("/{id}/delete/movie/{movieId}")
-    public void deleteMovie(@PathVariable Long id, @PathVariable Long movieId){
+    public @ResponseBody void deleteMovie(@PathVariable Long id, @PathVariable Long movieId){
         distributorService.deleteMovie(id,movieId);
     };
     @PutMapping("/{id}/delete/TVShow/{TVShowId}")
-    public void deleteTVShow(@PathVariable Long id, @PathVariable Long TVShowId){
+    public @ResponseBody void deleteTVShow(@PathVariable Long id, @PathVariable Long TVShowId){
         distributorService.deleteTVShow(id,TVShowId);
     };
 

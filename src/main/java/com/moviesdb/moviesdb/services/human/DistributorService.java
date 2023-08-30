@@ -24,6 +24,6 @@ public interface DistributorService {
     public void deleteTVShow(Long distributorId,Long tvShowId);
     public void deleteMovie(Long distributorId,Long movieId);
 
-    public void addTVShow(TVShow tvShow, Long id);
-    public void addMovie(Movie movie, Long id);
+    public void addTVShow(Long tvShowId, Long distributorId);
+    public void addMovie(Long movieId, Long distributorId);
 }

@@ -3,12 +3,15 @@ package com.moviesdb.moviesdb.models;
 import com.moviesdb.moviesdb.models.superclasses.NonHumanBaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
-import lombok.Data;
+import lombok.*;
 
 import java.util.Set;
 
 @Entity
-@Data
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Distributor extends NonHumanBaseEntity {
 
     @ManyToMany(mappedBy = "distributors")
