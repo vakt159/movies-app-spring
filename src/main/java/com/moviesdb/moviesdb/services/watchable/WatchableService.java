@@ -10,5 +10,7 @@ public interface WatchableService <T extends WatchableBaseEntity> {
     T save(T watchable);
     T update(T watchable, Long id);
 
+    void deleteDistributor(Long watchableId, Long distributorId);
+    void deleteActor(Long watchableId,Long actorId);
     void deleteById(Long id);
 }

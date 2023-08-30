@@ -43,6 +43,16 @@ public class TVShowServiceImpl implements WatchableService<TVShow> {
     }
 
     @Override
+    public void deleteDistributor(Long watchableId, Long distributorId) {
+
+    }
+
+    @Override
+    public void deleteActor(Long watchableId, Long actorId) {
+
+    }
+
+    @Override
     public void deleteById(Long id) {
 
     }
