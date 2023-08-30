@@ -18,9 +18,8 @@ public class Movie extends WatchableBaseEntity {
     private Set<Actor> actors;
 
     @ManyToOne
-    @JoinColumn(name = "director_id",nullable = false)
+    @JoinColumn(name = "director_id",nullable = true)
     private Director director;
-
 
     @ManyToMany
     @JoinTable(name = "movie_distributor",
