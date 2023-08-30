@@ -21,7 +21,6 @@ public class Movie extends WatchableBaseEntity {
     @JoinColumn(name = "director_id",nullable = true)
     private Director director;
 
-
     @ManyToMany
     @JoinTable(name = "movie_distributor",
             joinColumns = @JoinColumn(name = "movie_id"),
