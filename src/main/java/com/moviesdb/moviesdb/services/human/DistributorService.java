@@ -1,6 +1,8 @@
 package com.moviesdb.moviesdb.services.human;
 
 import com.moviesdb.moviesdb.models.Distributor;
+import com.moviesdb.moviesdb.models.Movie;
+import com.moviesdb.moviesdb.models.TVShow;
 
 import java.util.List;
 
@@ -10,13 +12,18 @@ public interface DistributorService {
 
    void deleteDistributorById(Long id);
 
-    Distributor findById(Long id);
+    Distributor findDistributorById(Long id);
 
     Distributor findByName(String name);
 
 
     Distributor save(Distributor distributor);
 
+    public Distributor update(Long id, Distributor distributor);
 
+    public void deleteTVShow(Long distributorId,Long tvShowId);
+    public void deleteMovie(Long distributorId,Long movieId);
 
+    public void addTVShow(TVShow tvShow, Long id);
+    public void addMovie(Movie movie, Long id);
 }

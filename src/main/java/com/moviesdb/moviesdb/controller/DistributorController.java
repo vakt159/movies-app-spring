@@ -2,6 +2,8 @@ package com.moviesdb.moviesdb.controller;
 
 
 import com.moviesdb.moviesdb.models.Distributor;
+import com.moviesdb.moviesdb.models.Movie;
+import com.moviesdb.moviesdb.models.TVShow;
 import com.moviesdb.moviesdb.services.human.DistributorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +37,7 @@ public class DistributorController {
     @GetMapping("/find/{id}")
     public @ResponseBody Distributor findById(@PathVariable(value = "id") Long id)
     {
-        return distributorService.findById(id);
+        return distributorService.findDistributorById(id);
     }
     @PostMapping("/save")
     public @ResponseBody Distributor add(@RequestBody Distributor distributor)
@@ -47,6 +49,30 @@ public class DistributorController {
     {
         distributorService.deleteDistributorById(id);
     }
+    @PutMapping("/{id}/update")
+    public @ResponseBody Distributor edit(@RequestBody Distributor distributor, @PathVariable(value = "id") Long id)
+    {
+        return distributorService.update(id,distributor);
+    }
+
+    @PutMapping("/{id}/add/movie")
+    public void addMovie(@RequestBody Movie movie, @PathVariable Long id){
+        distributorService.addMovie(movie, id);
+    };
+
+    @PutMapping("/{id}/add/TVShow")
+    public void addTVShow(@RequestBody TVShow tvShow, @PathVariable Long id){
+        distributorService.addTVShow(tvShow, id);
+    };
+
+    @PutMapping("/{id}/delete/movie/{movieId}")
+    public void deleteMovie(@PathVariable Long id, @PathVariable Long movieId){
+        distributorService.deleteMovie(id,movieId);
+    };
+    @PutMapping("/{id}/delete/TVShow/{TVShowId}")
+    public void deleteTVShow(@PathVariable Long id, @PathVariable Long TVShowId){
+        distributorService.deleteTVShow(id,TVShowId);
+    };
 
     @ExceptionHandler
     public ResponseEntity<String> onMissingDistributor(NoSuchElementException ex){
