@@ -38,6 +38,10 @@ public class DirectorServiceImpl implements HumanService<Director> {
         return directorDAO.save(director);
     }
 
+    @Override
+    public void deleteById(Long id) {
+    }
+
     public HumanBaseEntity findDirectorByFirstNameAndLastName(String firstName, String lastName)
     {
         Director foundDirector = directorDAO.findDirectorByFirstNameAndLastName(firstName, lastName);
