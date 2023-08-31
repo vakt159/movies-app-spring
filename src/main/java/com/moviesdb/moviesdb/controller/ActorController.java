@@ -17,7 +17,6 @@ import java.util.NoSuchElementException;
 import org.springframework.http.HttpStatus;
 
 @Controller
-@RequestMapping({"/actor", "actor"})
 public class ActorController {
     private final HumanService actorService;
 
@@ -25,7 +24,7 @@ public class ActorController {
         this.actorService = actorService;
     }
 
-    @GetMapping("/all")
+    @GetMapping("/actors")
     public @ResponseBody List<ActorDTO> getAll() {
         List<HumanBaseEntity> actors = actorService.findAll();
         List<ActorDTO> actorDTOS = new ArrayList<>();
@@ -35,7 +34,7 @@ public class ActorController {
         return actorDTOS;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/actors/{id}")
     public @ResponseBody Actor getActor(@PathVariable Long id) {
         Actor actor = (Actor)actorService.findById(id);
         if (actor == null) {
@@ -45,7 +44,7 @@ public class ActorController {
         }
     }
 
-    @PostMapping
+    @PostMapping("/actors/save")
     public @ResponseBody Actor saveActor(@RequestBody Actor actor) {
         return (Actor)actorService.save(actor);
     }
@@ -60,22 +59,22 @@ public class ActorController {
 //        }
 //    }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/actors/{id}/delete")
     public @ResponseBody void deleteById(@PathVariable Long id) {
         actorService.deleteById(id);
     }
-    @PutMapping("{id}/update")
+    @PutMapping("/actors/{id}/update")
     public @ResponseBody Actor updateById(@RequestBody Actor actor,@PathVariable Long id)
     {
         return (Actor) actorService.update(actor, id);
     }
 
-    @DeleteMapping("{actorId}/delete/tvShow/{tvShowId}")
+    @DeleteMapping("/actors/{actorId}/tvShow/{tvShowId}/delete")
     public @ResponseBody void deleteTVShow(@PathVariable Long actorId, @PathVariable Long tvShowId){
         actorService.deleteTVShow(actorId,tvShowId);
     }
 
-    @PutMapping("{actorId}/save/tvShow/{tvShowId}")
+    @PutMapping("/actors/{actorId}/tvShow/{tvShowId}/save")
     public @ResponseBody void saveTVShowToActor(@PathVariable Long actorId, @PathVariable Long tvShowId){
          actorService.addTVShow(actorId,tvShowId);
     }

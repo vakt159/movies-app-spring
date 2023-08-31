@@ -2,9 +2,9 @@ package com.moviesdb.moviesdb.controller;
 
 
 import com.moviesdb.moviesdb.models.Distributor;
-import com.moviesdb.moviesdb.models.Movie;
-import com.moviesdb.moviesdb.models.TVShow;
-import com.moviesdb.moviesdb.services.nonhuman.DistributorService;
+import com.moviesdb.moviesdb.models.superclasses.NonHumanBaseEntity;
+import com.moviesdb.moviesdb.services.nonhuman.NonHumanService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -15,63 +15,62 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 @Controller
-@RequestMapping({"/distributor","distributor"})
 public class DistributorController {
 
-    private final DistributorService distributorService;
+    private final NonHumanService nonHumanService;
 
-    public DistributorController(DistributorService distributorService) {
-        this.distributorService = distributorService;
+    public DistributorController(@Qualifier("distributorServiceImpl") NonHumanService nonHumanService) {
+        this.nonHumanService = nonHumanService;
     }
 
-    @GetMapping("/all")
-    public @ResponseBody List<Distributor> getAll()
+    @GetMapping("/distributors")
+    public @ResponseBody List<NonHumanBaseEntity> getAll()
     {
-        return distributorService.findAll();
+        return nonHumanService.findAll();
     }
-    @GetMapping("/find")
+    @GetMapping("/distributors/findByName")
     public @ResponseBody Distributor findByName(@RequestBody Map<String,String> body)
     {
-        return distributorService.findByName(body.get("name"));
+        return (Distributor) nonHumanService.findByName(body.get("name"));
     }
-    @GetMapping("/find/{id}")
+    @GetMapping("/distributors/{id}")
     public @ResponseBody Distributor findById(@PathVariable(value = "id") Long id)
     {
-        return distributorService.findDistributorById(id);
+        return (Distributor) nonHumanService.findDistributorById(id);
     }
-    @PostMapping("/save")
+    @PostMapping("/distributors/save")
     public @ResponseBody Distributor add(@RequestBody Distributor distributor)
     {
-        return distributorService.save(distributor);
+        return (Distributor) nonHumanService.save(distributor);
     }
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/distributors/{id}/delete")
     public @ResponseBody void deleteById(@PathVariable(value = "id") Long id)
     {
-        distributorService.deleteDistributorById(id);
+        nonHumanService.deleteDistributorById(id);
     }
-    @PutMapping("/{id}/update")
+    @PutMapping("/distributors/{id}/update")
     public @ResponseBody Distributor edit(@RequestBody Distributor distributor, @PathVariable(value = "id") Long id)
     {
-        return distributorService.update(id,distributor);
+        return (Distributor) nonHumanService.update(id,distributor);
     }
 
-    @PutMapping("/{distributorId}/add/movie/{movieId}")
+    @PutMapping("/distributors/{distributorId}/movie/{movieId}/add")
     public @ResponseBody void addMovie(@PathVariable Long movieId, @PathVariable Long distributorId){
-        distributorService.addMovie(movieId, distributorId);
+        nonHumanService.addMovie(movieId, distributorId);
     };
 
-    @PutMapping("/{distributorId}/add/TVShow/{tvShowId}")
+    @PutMapping("/distributors/{distributorId}/TVShow/{tvShowId}/add")
     public @ResponseBody void addTVShow(@PathVariable Long tvShowId, @PathVariable Long distributorId){
-        distributorService.addTVShow(tvShowId, distributorId);
+        nonHumanService.addTVShow(tvShowId, distributorId);
     };
 
-    @PutMapping("/{id}/delete/movie/{movieId}")
+    @PutMapping("/distributors/{id}/movie/{movieId}/delete")
     public @ResponseBody void deleteMovie(@PathVariable Long id, @PathVariable Long movieId){
-        distributorService.deleteMovie(id,movieId);
+        nonHumanService.deleteMovie(id,movieId);
     };
-    @PutMapping("/{id}/delete/TVShow/{TVShowId}")
+    @PutMapping("/distributors/{id}/TVShow/{TVShowId}/delete")
     public @ResponseBody void deleteTVShow(@PathVariable Long id, @PathVariable Long TVShowId){
-        distributorService.deleteTVShow(id,TVShowId);
+        nonHumanService.deleteTVShow(id,TVShowId);
     };
 
     @ExceptionHandler

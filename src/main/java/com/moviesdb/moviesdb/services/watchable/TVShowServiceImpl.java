@@ -7,6 +7,7 @@ import com.moviesdb.moviesdb.models.superclasses.WatchableBaseEntity;
 import com.moviesdb.moviesdb.persistence.TVShowDAO;
 import com.moviesdb.moviesdb.services.human.ActorServiceImpl;
 import com.moviesdb.moviesdb.services.nonhuman.DistributorServiceImpl;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,7 +21,9 @@ public class TVShowServiceImpl implements WatchableService  {
     private final DistributorServiceImpl distributorService;
     private final ActorServiceImpl actorService;
 
-    public TVShowServiceImpl(TVShowDAO tvShowDAO, DistributorServiceImpl distributorService, ActorServiceImpl actorService) {
+    public TVShowServiceImpl(TVShowDAO tvShowDAO,
+                             DistributorServiceImpl distributorService,
+                             @Lazy ActorServiceImpl actorService) {
         this.tvShowDAO = tvShowDAO;
         this.distributorService = distributorService;
         this.actorService = actorService;
