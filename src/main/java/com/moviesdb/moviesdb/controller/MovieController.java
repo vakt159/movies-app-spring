@@ -33,7 +33,7 @@ public class MovieController {
     }
 
     @GetMapping("/movies")
-    public @ResponseBody List<MovieDTO> getAll() {
+    public @ResponseBody List<MovieDTO> findAll() {
         List<WatchableBaseEntity> movies = movieService.findAll();
         List<MovieDTO> movieDTOS = new ArrayList<>();
         for (WatchableBaseEntity movie : movies){
@@ -43,7 +43,7 @@ public class MovieController {
     }
 
     @GetMapping("/movies/{id}")
-    public @ResponseBody MovieDTO getMovie(@PathVariable Long id) {
+    public @ResponseBody MovieDTO findById(@PathVariable Long id) {
         Movie movie = (Movie) movieService.findById(id);
         if (movie == null) {
             throw new NoSuchElementException("Movie with id = " + id + " does not exist");
@@ -52,7 +52,7 @@ public class MovieController {
         }
     }
     @PostMapping("/movies/save")
-    public @ResponseBody MovieDTO saveMovie(@Valid @RequestBody Movie movie) {
+    public @ResponseBody MovieDTO save(@Valid @RequestBody Movie movie) {
         return MovieDTOConverter.tomovieDTO((Movie) movieService.save(movie));
     }
     @DeleteMapping("/movies/{id}/delete")
@@ -61,16 +61,16 @@ public class MovieController {
     }
 
     @PutMapping("/movies/{movieId}/distributor/{distId}/delete")
-    public void deleteDistributorById(@PathVariable Long movieId, @PathVariable Long distId)
+    public void deleteDistributor(@PathVariable Long movieId, @PathVariable Long distId)
     {
         movieService.deleteDistributor(movieId,distId);
     }
     @PutMapping("/movies/{id}/update")
-    public @ResponseBody Movie edit(@RequestBody Movie movie, @PathVariable(value = "id") Long id) {
+    public @ResponseBody Movie update(@RequestBody Movie movie, @PathVariable(value = "id") Long id) {
         return (Movie) movieService.update(movie,id);
     }
     @PutMapping("/movies/{movieId}/actor/{actorId}/delete")
-    public void deleteActorById(@PathVariable Long movieId, @PathVariable Long actorId)
+    public void deleteActor(@PathVariable Long movieId, @PathVariable Long actorId)
     {
         movieService.deleteActor(   movieId,actorId);
     }

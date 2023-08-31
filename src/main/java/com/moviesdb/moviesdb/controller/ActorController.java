@@ -26,7 +26,7 @@ public class ActorController {
     }
 
     @GetMapping("/actors")
-    public @ResponseBody List<ActorDTO> getAll() {
+    public @ResponseBody List<ActorDTO> findAll() {
         List<HumanBaseEntity> actors = actorService.findAll();
         List<ActorDTO> actorDTOS = new ArrayList<>();
         for (HumanBaseEntity actor : actors){
@@ -36,7 +36,7 @@ public class ActorController {
     }
 
     @GetMapping("/actors/{id}")
-    public @ResponseBody ActorDTO getActor(@PathVariable Long id) {
+    public @ResponseBody ActorDTO findById(@PathVariable Long id) {
         Actor actor = (Actor)actorService.findById(id);
         if (actor == null) {
             throw new NoSuchElementException("Actor with id = " + id + " does not exist");
@@ -46,7 +46,7 @@ public class ActorController {
     }
 
     @PostMapping("/actors/save")
-    public @ResponseBody ActorDTO saveActor(@RequestBody Actor actor) {
+    public @ResponseBody ActorDTO save(@RequestBody Actor actor) {
         return ActorDTOConverter.toactorDTO((Actor)actorService.save(actor));
 
     }
@@ -66,7 +66,7 @@ public class ActorController {
         actorService.deleteById(id);
     }
     @PutMapping("/actors/{id}/update")
-    public @ResponseBody ActorDTO updateById(@Valid @RequestBody Actor actor,@PathVariable Long id)
+    public @ResponseBody ActorDTO edit(@Valid @RequestBody Actor actor,@PathVariable Long id)
     {
         return ActorDTOConverter.toactorDTO((Actor) actorService.update(actor, id));
     }
@@ -77,7 +77,7 @@ public class ActorController {
     }
 
     @PutMapping("/actors/{actorId}/tvShow/{tvShowId}/save")
-    public @ResponseBody void saveTVShowToActor(@PathVariable Long actorId, @PathVariable Long tvShowId){
+    public @ResponseBody void addTVShow(@PathVariable Long actorId, @PathVariable Long tvShowId){
          actorService.addTVShow(actorId,tvShowId);
     }
 

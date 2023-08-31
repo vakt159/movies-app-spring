@@ -1,6 +1,5 @@
 package com.moviesdb.moviesdb.services.nonhuman;
 
-import com.moviesdb.moviesdb.models.Distributor;
 import com.moviesdb.moviesdb.models.superclasses.NonHumanBaseEntity;
 
 import java.util.List;
@@ -8,9 +7,7 @@ import java.util.List;
 public interface NonHumanService {
 
     List<NonHumanBaseEntity> findAll();
-
-   void deleteDistributorById(Long id);
-
+    void deleteById(Long id);
     NonHumanBaseEntity findDistributorById(Long id);
 
     NonHumanBaseEntity findByName(String name);

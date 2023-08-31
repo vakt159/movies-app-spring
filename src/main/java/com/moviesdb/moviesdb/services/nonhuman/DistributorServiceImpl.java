@@ -40,7 +40,7 @@ public class DistributorServiceImpl implements NonHumanService {
 
     @Override
     @Transactional
-    public void deleteDistributorById(Long id) {
+    public void deleteById(Long id) {
         if (distributorDAO.findById(id).isPresent()) {
             distributorDAO.deleteById(id);
         } else {
