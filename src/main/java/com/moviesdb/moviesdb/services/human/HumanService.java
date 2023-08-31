@@ -13,7 +13,7 @@ public interface HumanService {
     HumanBaseEntity update(HumanBaseEntity human, Long id);
     void deleteTVShow(Long humanId,Long TvShowId);
     void deleteMovie(Long humanId,Long movieId);
-    HumanBaseEntity saveTVShow(Long humanId,Long TvShowId);
-    HumanBaseEntity saveMovie(Long humanId,Long movieId);
+    void addTVShow(Long humanId,Long TvShowId);
+    void addMovie(Long humanId,Long movieId);
 
 }

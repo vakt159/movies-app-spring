@@ -1,9 +1,7 @@
 package com.moviesdb.moviesdb.controller;
 
 import com.moviesdb.moviesdb.models.Director;
-import com.moviesdb.moviesdb.models.Movie;
-import com.moviesdb.moviesdb.models.TVShow;
-import com.moviesdb.moviesdb.services.human.DirectorServiceImpl;
+import com.moviesdb.moviesdb.models.superclasses.HumanBaseEntity;
 import com.moviesdb.moviesdb.services.human.HumanService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -12,32 +10,32 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
 
 @Controller
 @RequestMapping({"/director","director"})
 public class DirectorController {
 
-    private final DirectorServiceImpl directorService;
+    private final HumanService directorService;
 
-    public DirectorController( DirectorServiceImpl directorService) {
+    public DirectorController(@Qualifier("directorServiceImpl") HumanService directorService) {
         this.directorService = directorService;
     }
 
+
     @GetMapping("/all")
-    public @ResponseBody List<Director> getAll() {
+    public @ResponseBody List<HumanBaseEntity> getAll() {
         return directorService.findAll();
     }
 
     @GetMapping("/find/{id}")
     public @ResponseBody Director findById(@PathVariable(value = "id") Long id) {
-        return directorService.findById(id);
+        return (Director) directorService.findById(id);
     }
 
     @PostMapping("/save")
     public @ResponseBody Director add(@RequestBody Director director) {
-        return directorService.save(director);
+        return (Director) directorService.save(director);
     }
 
     @DeleteMapping("/delete/{id}")
@@ -47,7 +45,7 @@ public class DirectorController {
 
     @PutMapping("/{id}/update")
     public @ResponseBody Director edit(@RequestBody Director director, @PathVariable(value = "id") Long id) {
-        return directorService.update(director,id);
+        return (Director) directorService.update(director,id);
     }
 
     @PutMapping("/{directorId}/add/movie/{movieId}")

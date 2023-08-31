@@ -76,8 +76,8 @@ public class ActorController {
     }
 
     @PutMapping("{actorId}/save/tvShow/{tvShowId}")
-    public @ResponseBody Actor saveTVShowToActor(@PathVariable Long actorId, @PathVariable Long tvShowId){
-        return (Actor) actorService.saveTVShow(actorId,tvShowId);
+    public @ResponseBody void saveTVShowToActor(@PathVariable Long actorId, @PathVariable Long tvShowId){
+         actorService.addTVShow(actorId,tvShowId);
     }
 
     @ExceptionHandler

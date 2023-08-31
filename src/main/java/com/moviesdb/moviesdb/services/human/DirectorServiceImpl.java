@@ -1,20 +1,19 @@
 package com.moviesdb.moviesdb.services.human;
 
 import com.moviesdb.moviesdb.models.Director;
+import com.moviesdb.moviesdb.models.Movie;
+import com.moviesdb.moviesdb.models.TVShow;
 import com.moviesdb.moviesdb.models.superclasses.HumanBaseEntity;
-import com.moviesdb.moviesdb.models.superclasses.WatchableBaseEntity;
 import com.moviesdb.moviesdb.persistence.DirectorDAO;
 import com.moviesdb.moviesdb.persistence.MovieDAO;
 import com.moviesdb.moviesdb.persistence.TVShowDAO;
-import com.moviesdb.moviesdb.services.watchable.MovieServiceImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
+
 
 @Service
 public class DirectorServiceImpl implements HumanService {
@@ -66,25 +65,6 @@ public class DirectorServiceImpl implements HumanService {
         return null;
     }
 
-    @Override
-    public void deleteTVShow(Long humanId, Long TvShowId) {
-
-    }
-
-    @Override
-    public void deleteMovie(Long humanId, Long movieId) {
-
-    }
-
-    @Override
-    public HumanBaseEntity saveTVShow(Long humanId, Long TvShowId) {
-        return null;
-    }
-
-    @Override
-    public HumanBaseEntity saveMovie(Long humanId, Long movieId) {
-        return null;
-    }
 
     public HumanBaseEntity findDirectorByFirstNameAndLastName(String firstName, String lastName)
     {

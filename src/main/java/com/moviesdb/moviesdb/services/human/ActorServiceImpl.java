@@ -112,7 +112,7 @@ public class ActorServiceImpl implements HumanService {
 
     }
     @Override
-    public HumanBaseEntity saveTVShow(Long actor_id, Long tvShow_id) {
+    public void addTVShow(Long actor_id, Long tvShow_id) {
         Actor origin_actor = findById(actor_id);
         TVShow tvShow = tvShowService.findById(tvShow_id);
         if (origin_actor == null){
@@ -124,20 +124,19 @@ public class ActorServiceImpl implements HumanService {
             tvShow.getActors().add(origin_actor);
             actorDAO.save(origin_actor);
             tvShowService.save(tvShow);
-            return origin_actor;
         }
     }
 
     @Override
-    public HumanBaseEntity saveMovie(Long humanId, Long movieId) {
-        return null;
+    public void addMovie(Long humanId, Long movieId) {
+
     }
 
-    public Actor findActorByFirstNameAndLastName(String firstName, String lastName) {
-        Actor foundActor = actorDAO.findActorByFirstNameAndLastName(firstName, lastName);
-        if (foundActor == null)
-            throw new RuntimeException("Actor doesn't exist");
-        return foundActor;
-    }
+//    public Actor findActorByFirstNameAndLastName(String firstName, String lastName) {
+//        Actor foundActor = actorDAO.findActorByFirstNameAndLastName(firstName, lastName);
+//        if (foundActor == null)
+//            throw new RuntimeException("Actor doesn't exist");
+//        return foundActor;
+//    }
 
 }
