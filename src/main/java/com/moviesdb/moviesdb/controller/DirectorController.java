@@ -3,13 +3,18 @@ package com.moviesdb.moviesdb.controller;
 import com.moviesdb.moviesdb.models.Director;
 import com.moviesdb.moviesdb.models.superclasses.HumanBaseEntity;
 import com.moviesdb.moviesdb.services.human.HumanService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 @Controller
@@ -34,7 +39,7 @@ public class DirectorController {
     }
 
     @PostMapping("/save")
-    public @ResponseBody Director add(@RequestBody Director director) {
+    public @ResponseBody Director add( @Valid  @RequestBody Director director) {
         return (Director) directorService.save(director);
     }
 
@@ -44,7 +49,7 @@ public class DirectorController {
     }
 
     @PutMapping("/{id}/update")
-    public @ResponseBody Director edit(@RequestBody Director director, @PathVariable(value = "id") Long id) {
+    public @ResponseBody Director edit(@Valid @RequestBody Director director, @PathVariable(value = "id") Long id) {
         return (Director) directorService.update(director,id);
     }
 
@@ -71,5 +76,18 @@ public class DirectorController {
     @ExceptionHandler
     public ResponseEntity<String> onMissingDirector(NoSuchElementException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage() + ": no director was found");
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
     }
 }
