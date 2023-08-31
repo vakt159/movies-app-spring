@@ -15,4 +15,5 @@ public interface HumanService {
     void deleteMovie(Long humanId,Long movieId);
     HumanBaseEntity saveTVShow(Long humanId,Long TvShowId);
     HumanBaseEntity saveMovie(Long humanId,Long movieId);
+
 }
