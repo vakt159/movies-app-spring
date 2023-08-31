@@ -5,14 +5,15 @@ import com.moviesdb.moviesdb.DTOs.dto.ActorDTO;
 import com.moviesdb.moviesdb.models.Actor;
 import com.moviesdb.moviesdb.models.superclasses.HumanBaseEntity;
 import com.moviesdb.moviesdb.services.human.HumanService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 import org.springframework.http.HttpStatus;
 
@@ -46,6 +47,7 @@ public class ActorController {
 
     @PostMapping("/actors/save")
     public @ResponseBody Actor saveActor(@RequestBody Actor actor) {
+
         return (Actor)actorService.save(actor);
     }
 
@@ -64,7 +66,8 @@ public class ActorController {
         actorService.deleteById(id);
     }
     @PutMapping("/actors/{id}/update")
-    public @ResponseBody Actor updateById(@RequestBody Actor actor,@PathVariable Long id)
+    public @ResponseBody Actor updateById(@Valid @RequestBody Actor actor,@PathVariable Long id)
+
     {
         return (Actor) actorService.update(actor, id);
     }
@@ -82,5 +85,18 @@ public class ActorController {
     @ExceptionHandler
     public ResponseEntity<String> ActorException(NoSuchElementException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
     }
 }

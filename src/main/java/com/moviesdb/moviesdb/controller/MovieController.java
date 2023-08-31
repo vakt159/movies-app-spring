@@ -5,13 +5,18 @@ import com.moviesdb.moviesdb.models.Movie;
 import com.moviesdb.moviesdb.models.superclasses.WatchableBaseEntity;
 import com.moviesdb.moviesdb.services.watchable.MovieServiceImpl;
 import com.moviesdb.moviesdb.services.watchable.WatchableService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 @Controller
@@ -38,9 +43,15 @@ public class MovieController {
         }
     }
     @PostMapping("/movies/save")
-    public @ResponseBody Movie saveMovie(@RequestBody Movie movie) {
+    public @ResponseBody Movie saveMovie(@Valid @RequestBody Movie movie) {
+
 
         return (Movie) movieService.save(movie);
+    }
+    @PutMapping("{id}/update")
+    public @ResponseBody Movie updateById(@Valid @RequestBody Movie movie, @PathVariable Long id)
+    {
+        return (Movie) movieService.update(movie,id);
     }
 
     @DeleteMapping("/movies/{id}/delete")
@@ -65,5 +76,17 @@ public class MovieController {
     @ExceptionHandler
     public ResponseEntity<String> MovieException(NoSuchElementException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
     }
 }

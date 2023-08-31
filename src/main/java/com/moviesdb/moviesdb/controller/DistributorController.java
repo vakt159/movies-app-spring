@@ -8,8 +8,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -39,7 +42,7 @@ public class DistributorController {
         return (Distributor) nonHumanService.findDistributorById(id);
     }
     @PostMapping("/distributors/save")
-    public @ResponseBody Distributor add(@RequestBody Distributor distributor)
+    public @ResponseBody Distributor add(@Valid @RequestBody Distributor distributor)
     {
         return (Distributor) nonHumanService.save(distributor);
     }
@@ -49,7 +52,8 @@ public class DistributorController {
         nonHumanService.deleteDistributorById(id);
     }
     @PutMapping("/distributors/{id}/update")
-    public @ResponseBody Distributor edit(@RequestBody Distributor distributor, @PathVariable(value = "id") Long id)
+    public @ResponseBody Distributor edit(@Valid @RequestBody Distributor distributor, @PathVariable(value = "id") Long id)
+
     {
         return (Distributor) nonHumanService.update(id,distributor);
     }
@@ -77,6 +81,19 @@ public class DistributorController {
     public ResponseEntity<String> onMissingDistributor(NoSuchElementException ex){
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage() + ": no one distributor was found");
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
     }
 
 }

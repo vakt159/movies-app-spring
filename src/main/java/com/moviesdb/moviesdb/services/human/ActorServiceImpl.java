@@ -3,10 +3,10 @@ package com.moviesdb.moviesdb.services.human;
 import com.moviesdb.moviesdb.models.Movie;
 import com.moviesdb.moviesdb.models.TVShow;
 import com.moviesdb.moviesdb.models.superclasses.HumanBaseEntity;
-import com.moviesdb.moviesdb.models.superclasses.WatchableBaseEntity;
 import com.moviesdb.moviesdb.persistence.ActorDAO;
 import com.moviesdb.moviesdb.models.Actor;
 
+import com.moviesdb.moviesdb.services.watchable.MovieServiceImpl;
 import com.moviesdb.moviesdb.services.watchable.TVShowServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -19,11 +19,13 @@ import java.util.Optional;
 public class ActorServiceImpl implements HumanService {
     private final ActorDAO actorDAO;
     private final TVShowServiceImpl tvShowService;
+    private final MovieServiceImpl movieService;
 
 
-    public ActorServiceImpl(ActorDAO actorDAO, TVShowServiceImpl tvShowService) {
+    public ActorServiceImpl(ActorDAO actorDAO, TVShowServiceImpl tvShowService, MovieServiceImpl movieService) {
         this.tvShowService = tvShowService;
         this.actorDAO = actorDAO;
+        this.movieService = movieService;
     }
 
     @Override
@@ -108,8 +110,22 @@ public class ActorServiceImpl implements HumanService {
     }
 
     @Override
-    public void deleteMovie(Long humanId, Long movieId) {
-
+    public void deleteMovie(Long actor_id, Long movie_id) {
+        Actor origin_actor = findById(actor_id);
+        Movie movie = movieService.findById(movie_id);
+        if (origin_actor == null){
+            throw new NoSuchElementException("Actor with id = " + actor_id + " does not exist");
+        } else if(movie == null){
+            throw new NoSuchElementException("Movie with id = " + movie_id + " does not exist");
+        } else if(!origin_actor.getMovies().contains(movie)){
+            throw new NoSuchElementException("Actor with id = " + actor_id + " have not played it Movie with id = " + movie_id);
+        }
+        else{
+            origin_actor.getMovies().remove(movie);
+            movie.getActors().remove(origin_actor);
+            actorDAO.save(origin_actor);
+            movieService.save(movie);
+        }
     }
     @Override
     public void addTVShow(Long actor_id, Long tvShow_id) {
@@ -128,8 +144,19 @@ public class ActorServiceImpl implements HumanService {
     }
 
     @Override
-    public void addMovie(Long humanId, Long movieId) {
-
+    public void addMovie(Long actor_id, Long movie_id) {
+        Actor origin_actor = findById(actor_id);
+        Movie movie = movieService.findById(movie_id);
+        if (origin_actor == null){
+            throw new NoSuchElementException("Actor with id = " + actor_id + " does not exist");
+        } else if(movie == null){
+            throw new NoSuchElementException("Movie with id = " + movie_id + " does not exist");
+        }else{
+            origin_actor.getMovies().add(movie);
+            movie.getActors().add(origin_actor);
+            actorDAO.save(origin_actor);
+            movieService.save(movie);
+        }
     }
 
 //    public Actor findActorByFirstNameAndLastName(String firstName, String lastName) {
