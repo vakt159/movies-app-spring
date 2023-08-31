@@ -8,7 +8,6 @@ import lombok.*;
 
 import java.util.Set;
 
-@Entity
 @Getter
 @Setter
 @NoArgsConstructor
