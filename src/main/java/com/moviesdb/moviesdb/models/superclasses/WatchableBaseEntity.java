@@ -2,10 +2,13 @@ package com.moviesdb.moviesdb.models.superclasses;
 
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 @MappedSuperclass
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class WatchableBaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,12 +21,12 @@ public class WatchableBaseEntity {
     private String description;
 
     @Column(name = "ageRestriction")
-    private short ageRestriction;
+    private Short ageRestriction;
 
     @Column(name = "duration")
-    private int duration;
+    private Integer duration;
 
     @Column(name = "rating")
-    private byte rating;
+    private Byte rating;
 
 }

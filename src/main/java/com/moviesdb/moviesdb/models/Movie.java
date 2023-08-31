@@ -2,11 +2,14 @@ package com.moviesdb.moviesdb.models;
 
 import com.moviesdb.moviesdb.models.superclasses.WatchableBaseEntity;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "movies")
 public class Movie extends WatchableBaseEntity {
@@ -20,7 +23,6 @@ public class Movie extends WatchableBaseEntity {
     @ManyToOne
     @JoinColumn(name = "director_id",nullable = true)
     private Director director;
-
 
     @ManyToMany
     @JoinTable(name = "movie_distributor",

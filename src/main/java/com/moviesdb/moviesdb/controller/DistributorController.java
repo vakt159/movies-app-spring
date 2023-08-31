@@ -1,9 +1,10 @@
 package com.moviesdb.moviesdb.controller;
 
+
 import com.moviesdb.moviesdb.models.Distributor;
 import com.moviesdb.moviesdb.models.Movie;
 import com.moviesdb.moviesdb.models.TVShow;
-import com.moviesdb.moviesdb.services.human.DistributorService;
+import com.moviesdb.moviesdb.services.nonhuman.DistributorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

@@ -1,6 +1,5 @@
-package com.moviesdb.moviesdb.services.human;
+package com.moviesdb.moviesdb.services.nonhuman;
 
-import com.moviesdb.moviesdb.models.Director;
 import com.moviesdb.moviesdb.models.Distributor;
 import com.moviesdb.moviesdb.models.Movie;
 import com.moviesdb.moviesdb.models.TVShow;
