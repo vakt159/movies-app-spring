@@ -4,6 +4,7 @@ package com.moviesdb.moviesdb.controller;
 import com.moviesdb.moviesdb.models.Distributor;
 import com.moviesdb.moviesdb.models.superclasses.NonHumanBaseEntity;
 import com.moviesdb.moviesdb.services.nonhuman.NonHumanService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

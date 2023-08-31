@@ -58,7 +58,7 @@ public class TVShowController {
         return TVShowDTOConverter.totvShowDTO((TVShow) tvShowService.save(tvShow));
 
     }
-    @PutMapping("{id}/update")
+    @PutMapping("/tvShow/{id}/update")
     public @ResponseBody TVShow updateById(@Valid @RequestBody TVShow tvShow, @PathVariable Long id)
     {
         return (TVShow) tvShowService.update(tvShow,id);

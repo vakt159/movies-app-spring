@@ -53,16 +53,8 @@ public class MovieController {
     }
     @PostMapping("/movies/save")
     public @ResponseBody MovieDTO saveMovie(@Valid @RequestBody Movie movie) {
-
-
         return MovieDTOConverter.tomovieDTO((Movie) movieService.save(movie));
     }
-    @PutMapping("{id}/update")
-    public @ResponseBody Movie updateById(@Valid @RequestBody Movie movie, @PathVariable Long id)
-    {
-        return (Movie) movieService.update(movie,id);
-    }
-
     @DeleteMapping("/movies/{id}/delete")
     public @ResponseBody void deleteById(@PathVariable Long id) {
         movieService.deleteById(id);
