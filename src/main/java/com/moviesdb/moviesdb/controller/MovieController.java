@@ -1,6 +1,9 @@
 package com.moviesdb.moviesdb.controller;
 
+import com.moviesdb.moviesdb.DTOs.converters.MovieDTOConverter;
+import com.moviesdb.moviesdb.DTOs.dto.MovieDTO;
 import com.moviesdb.moviesdb.models.Movie;
+import com.moviesdb.moviesdb.models.superclasses.HumanBaseEntity;
 import com.moviesdb.moviesdb.models.superclasses.WatchableBaseEntity;
 import com.moviesdb.moviesdb.services.watchable.MovieServiceImpl;
 import com.moviesdb.moviesdb.services.watchable.WatchableService;
@@ -10,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -24,23 +28,28 @@ public class MovieController {
     }
 
     @GetMapping("/all")
-    public @ResponseBody List<WatchableBaseEntity> getAll() {
-        return movieService.findAll();
+    public @ResponseBody List<MovieDTO> getAll() {
+        List<WatchableBaseEntity> movies = movieService.findAll();
+        List<MovieDTO> movieDTOS = new ArrayList<>();
+        for (WatchableBaseEntity movie : movies){
+            movieDTOS.add(MovieDTOConverter.tomovieDTO((Movie)movie));
+        }
+        return movieDTOS;
     }
 
     @GetMapping("/{id}")
-    public @ResponseBody Movie getMovie(@PathVariable Long id) {
+    public @ResponseBody MovieDTO getMovie(@PathVariable Long id) {
         Movie movie = (Movie) movieService.findById(id);
         if (movie == null) {
             throw new NoSuchElementException("Movie with id = " + id + " does not exist");
         } else {
-            return movie;
+            return MovieDTOConverter.tomovieDTO(movie);
         }
     }
     @PostMapping
-    public @ResponseBody Movie saveMovie(@RequestBody Movie movie) {
+    public @ResponseBody MovieDTO saveMovie(@RequestBody Movie movie) {
 
-        return (Movie) movieService.save(movie);
+        return MovieDTOConverter.tomovieDTO((Movie) movieService.save(movie));
     }
 
     @DeleteMapping("/delete/{id}")
