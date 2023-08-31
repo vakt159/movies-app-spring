@@ -5,18 +5,15 @@ import com.moviesdb.moviesdb.models.superclasses.HumanBaseEntity;
 
 import java.util.List;
 
-public interface HumanService<T extends HumanBaseEntity> {
-    T findById(Long id);
-    List<T> findAll();
-    T save(T human);
+public interface HumanService {
+    HumanBaseEntity findById(Long id);
+    List<HumanBaseEntity> findAll();
+    HumanBaseEntity save(HumanBaseEntity human);
     void deleteById(Long id);
-    T update(T human, Long id);
+    HumanBaseEntity update(HumanBaseEntity human, Long id);
+    void deleteTVShow(Long humanId,Long TvShowId);
+    void deleteMovie(Long humanId,Long movieId);
+    HumanBaseEntity saveTVShow(Long humanId,Long TvShowId);
+    HumanBaseEntity saveMovie(Long humanId,Long movieId);
 
-    void deleteTVShow(Long humanId, Long tvShowId);
-
-    void deleteMovie(Long humanId, Long movieId);
-
-    void addTVShow(Long tvShowId, Long humanId);
-
-    void addMovie(Long movieId, Long humanId);
 }

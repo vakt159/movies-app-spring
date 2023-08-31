@@ -1,16 +1,15 @@
 package com.moviesdb.moviesdb.services.human;
 
 import com.moviesdb.moviesdb.models.Director;
-import com.moviesdb.moviesdb.models.Distributor;
-import com.moviesdb.moviesdb.models.Movie;
-import com.moviesdb.moviesdb.models.TVShow;
 import com.moviesdb.moviesdb.models.superclasses.HumanBaseEntity;
+import com.moviesdb.moviesdb.models.superclasses.WatchableBaseEntity;
 import com.moviesdb.moviesdb.persistence.DirectorDAO;
 import com.moviesdb.moviesdb.persistence.MovieDAO;
 import com.moviesdb.moviesdb.persistence.TVShowDAO;
 import com.moviesdb.moviesdb.services.watchable.MovieServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -18,7 +17,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class DirectorServiceImpl implements HumanService<Director> {
+public class DirectorServiceImpl implements HumanService {
     private final DirectorDAO directorDAO;
     private final TVShowDAO tvShowDAO;
     private final MovieDAO movieDAO;
@@ -37,18 +36,20 @@ public class DirectorServiceImpl implements HumanService<Director> {
         return directorOptional.orElse(null);
     }
     @Override
-    public List<Director> findAll() {
-        List<Director> directors=directorDAO.findAll();
-        if(directors.isEmpty()||directors==null)
-            return null;
-        return directors;
+    public List<HumanBaseEntity> findAll() {
+        List<Director> directors = directorDAO.findAll();
+        if (directors == null || directors.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<HumanBaseEntity> humanDirectors = new ArrayList<>(directors);
+        return humanDirectors;
     }
 
     @Override
-    public Director save(Director director) {
+    public HumanBaseEntity save(HumanBaseEntity director) {
         if(director==null)
             throw new RuntimeException("Director doesn't exist");
-        return directorDAO.save(director);
+        return directorDAO.save((Director) director);
     }
 
     @Override
@@ -61,7 +62,27 @@ public class DirectorServiceImpl implements HumanService<Director> {
     }
 
     @Override
-    public Director update(Director director, Long id) {
+    public HumanBaseEntity update(HumanBaseEntity human, Long id) {
+        return null;
+    }
+
+    @Override
+    public void deleteTVShow(Long humanId, Long TvShowId) {
+
+    }
+
+    @Override
+    public void deleteMovie(Long humanId, Long movieId) {
+
+    }
+
+    @Override
+    public HumanBaseEntity saveTVShow(Long humanId, Long TvShowId) {
+        return null;
+    }
+
+    @Override
+    public HumanBaseEntity saveMovie(Long humanId, Long movieId) {
         return null;
     }
 

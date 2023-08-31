@@ -3,7 +3,9 @@ package com.moviesdb.moviesdb.controller;
 import com.moviesdb.moviesdb.DTOs.converters.ActorDTOConverter;
 import com.moviesdb.moviesdb.DTOs.dto.ActorDTO;
 import com.moviesdb.moviesdb.models.Actor;
-import com.moviesdb.moviesdb.services.human.ActorServiceImpl;
+import com.moviesdb.moviesdb.models.superclasses.HumanBaseEntity;
+import com.moviesdb.moviesdb.services.human.HumanService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -17,25 +19,25 @@ import org.springframework.http.HttpStatus;
 @Controller
 @RequestMapping({"/actor", "actor"})
 public class ActorController {
-    private final ActorServiceImpl actorService;
+    private final HumanService actorService;
 
-    public ActorController(ActorServiceImpl actorService) {
+    public ActorController(@Qualifier("actorServiceImpl") HumanService actorService) {
         this.actorService = actorService;
     }
 
     @GetMapping("/all")
     public @ResponseBody List<ActorDTO> getAll() {
-        List<Actor> actors = actorService.findAll();
+        List<HumanBaseEntity> actors = actorService.findAll();
         List<ActorDTO> actorDTOS = new ArrayList<>();
-        for (Actor actor : actors){
-            actorDTOS.add(ActorDTOConverter.toactorDTO(actor));
+        for (HumanBaseEntity actor : actors){
+            actorDTOS.add(ActorDTOConverter.toactorDTO((Actor)actor));
         }
         return actorDTOS;
     }
 
     @GetMapping("/{id}")
     public @ResponseBody Actor getActor(@PathVariable Long id) {
-        Actor actor = actorService.findById(id);
+        Actor actor = (Actor)actorService.findById(id);
         if (actor == null) {
             throw new NoSuchElementException("Actor with id = " + id + " does not exist");
         } else {
@@ -45,18 +47,18 @@ public class ActorController {
 
     @PostMapping
     public @ResponseBody Actor saveActor(@RequestBody Actor actor) {
-        return actorService.save(actor);
+        return (Actor)actorService.save(actor);
     }
 
-    @GetMapping("/find")
-    public @ResponseBody Actor findByFirstLastName(@RequestBody String firstName, String lastName) {
-        Actor actor = actorService.findActorByFirstNameAndLastName(firstName, lastName);
-        if (actor == null) {
-            throw new NoSuchElementException("Actor with first name = " + firstName + "and last name = " + lastName + " does not exist");
-        } else {
-            return actorService.findActorByFirstNameAndLastName(firstName, lastName);
-        }
-    }
+//    @GetMapping("/find")
+//    public @ResponseBody Actor findByFirstLastName(@RequestBody String firstName, String lastName) {
+//        Actor actor = actorService.findActorByFirstNameAndLastName(firstName, lastName);
+//        if (actor == null) {
+//            throw new NoSuchElementException("Actor with first name = " + firstName + "and last name = " + lastName + " does not exist");
+//        } else {
+//            return actorService.findActorByFirstNameAndLastName(firstName, lastName);
+//        }
+//    }
 
     @DeleteMapping("/delete/{id}")
     public @ResponseBody void deleteById(@PathVariable Long id) {
@@ -65,17 +67,17 @@ public class ActorController {
     @PutMapping("{id}/update")
     public @ResponseBody Actor updateById(@RequestBody Actor actor,@PathVariable Long id)
     {
-        return actorService.update(actor, id);
+        return (Actor) actorService.update(actor, id);
     }
 
     @DeleteMapping("{actorId}/delete/tvShow/{tvShowId}")
     public @ResponseBody void deleteTVShow(@PathVariable Long actorId, @PathVariable Long tvShowId){
-        actorService.deleteTVShowFromActor(actorId,tvShowId);
+        actorService.deleteTVShow(actorId,tvShowId);
     }
 
     @PutMapping("{actorId}/save/tvShow/{tvShowId}")
     public @ResponseBody Actor saveTVShowToActor(@PathVariable Long actorId, @PathVariable Long tvShowId){
-        return actorService.saveTVShowToActor(actorId,tvShowId);
+        return (Actor) actorService.saveTVShow(actorId,tvShowId);
     }
 
     @ExceptionHandler
