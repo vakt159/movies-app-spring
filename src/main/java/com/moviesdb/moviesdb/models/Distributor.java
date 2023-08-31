@@ -8,8 +8,11 @@ import lombok.*;
 
 import java.util.Set;
 
-@Getter
+
+@Entity
 @Setter
+@Getter
+
 @NoArgsConstructor
 @AllArgsConstructor
 public class Distributor extends NonHumanBaseEntity {

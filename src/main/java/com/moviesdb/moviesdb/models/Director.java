@@ -6,9 +6,10 @@ import lombok.*;
 
 import java.util.Set;
 
-
-@Getter
+@Entity
 @Setter
+@Getter
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name =  "directors")
