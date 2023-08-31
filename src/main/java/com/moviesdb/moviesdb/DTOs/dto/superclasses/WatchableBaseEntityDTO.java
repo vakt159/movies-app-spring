@@ -25,7 +25,7 @@ public class WatchableBaseEntityDTO {
     private Short ageRestriction;
 
 
-    private Integer duration;
+    private Short duration;
 
 
     private Byte rating;
