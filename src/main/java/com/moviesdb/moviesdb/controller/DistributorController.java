@@ -5,11 +5,15 @@ import com.moviesdb.moviesdb.models.Distributor;
 import com.moviesdb.moviesdb.models.Movie;
 import com.moviesdb.moviesdb.models.TVShow;
 import com.moviesdb.moviesdb.services.nonhuman.DistributorService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -40,7 +44,7 @@ public class DistributorController {
         return distributorService.findDistributorById(id);
     }
     @PostMapping("/save")
-    public @ResponseBody Distributor add(@RequestBody Distributor distributor)
+    public @ResponseBody Distributor add(@Valid  @RequestBody Distributor distributor)
     {
         return distributorService.save(distributor);
     }
@@ -50,7 +54,7 @@ public class DistributorController {
         distributorService.deleteDistributorById(id);
     }
     @PutMapping("/{id}/update")
-    public @ResponseBody Distributor edit(@RequestBody Distributor distributor, @PathVariable(value = "id") Long id)
+    public @ResponseBody Distributor edit(@Valid @RequestBody Distributor distributor, @PathVariable(value = "id") Long id)
     {
         return distributorService.update(id,distributor);
     }
@@ -78,6 +82,19 @@ public class DistributorController {
     public ResponseEntity<String> onMissingDistributor(NoSuchElementException ex){
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage() + ": no one distributor was found");
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
     }
 
 }

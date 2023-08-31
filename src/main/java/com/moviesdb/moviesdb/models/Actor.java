@@ -16,8 +16,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Table(name = "actors")
 public class Actor extends HumanBaseEntity {
-
-    @ManyToMany(mappedBy = "actors")
+   @ManyToMany(mappedBy = "actors")
     private Set<Movie> movies;
 //    @JsonIgnore
     @ManyToMany(mappedBy = "actors")

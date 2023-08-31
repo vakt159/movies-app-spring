@@ -1,15 +1,21 @@
 package com.moviesdb.moviesdb.controller;
 
+import com.moviesdb.moviesdb.models.Movie;
 import com.moviesdb.moviesdb.models.TVShow;
 import com.moviesdb.moviesdb.models.superclasses.WatchableBaseEntity;
 import com.moviesdb.moviesdb.services.watchable.WatchableService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 @Controller
@@ -37,8 +43,13 @@ public class TVShowController {
         }
     }
     @PostMapping()
-    public @ResponseBody TVShow saveTVShow(@RequestBody TVShow tvShow) {
+    public @ResponseBody TVShow saveTVShow(@Valid @RequestBody TVShow tvShow) {
         return (TVShow) tvShowService.save(tvShow);
+    }
+    @PutMapping("{id}/update")
+    public @ResponseBody TVShow updateById(@Valid @RequestBody TVShow tvShow, @PathVariable Long id)
+    {
+        return (TVShow) tvShowService.update(tvShow,id);
     }
 
     @DeleteMapping("/delete/{id}")
@@ -49,5 +60,18 @@ public class TVShowController {
     @ExceptionHandler
     public ResponseEntity<String> TVShowException(NoSuchElementException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
     }
 }
