@@ -44,16 +44,16 @@ public class MovieController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public void deleteById(@PathVariable Long id) {
+    public @ResponseBody void deleteById(@PathVariable Long id) {
         movieService.deleteById(id);
     }
 
-    @PutMapping("movie/{movieId}/delete/distributor/{distId}")
+    @PutMapping("{movieId}/delete/distributor/{distId}")
     public void deleteDistributorById(@PathVariable Long movieId, @PathVariable Long distId)
     {
         movieService.deleteDistributor(movieId,distId);
     }
-    @PutMapping("movie/{movieId}/delete/actor/{actorId}")
+    @PutMapping("{movieId}/delete/actor/{actorId}")
     public void deleteActorById(@PathVariable Long movieId, @PathVariable Long actorId)
     {
         movieService.deleteActor(   movieId,actorId);

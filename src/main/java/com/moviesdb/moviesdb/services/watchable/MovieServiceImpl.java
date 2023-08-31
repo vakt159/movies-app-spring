@@ -3,6 +3,7 @@ package com.moviesdb.moviesdb.services.watchable;
 import com.moviesdb.moviesdb.models.Actor;
 import com.moviesdb.moviesdb.models.Distributor;
 import com.moviesdb.moviesdb.models.Movie;
+import com.moviesdb.moviesdb.models.TVShow;
 import com.moviesdb.moviesdb.models.superclasses.WatchableBaseEntity;
 import com.moviesdb.moviesdb.persistence.ActorDAO;
 import com.moviesdb.moviesdb.persistence.DistributorDAO;
@@ -42,7 +43,6 @@ public class MovieServiceImpl implements WatchableService {
         List<WatchableBaseEntity> watchableMovies = new ArrayList<>(movies);
         return watchableMovies;
     }
-
     @Override
     public WatchableBaseEntity save(WatchableBaseEntity movie) {
         if(movie==null)
@@ -51,8 +51,8 @@ public class MovieServiceImpl implements WatchableService {
     }
 
     @Override
-    public WatchableBaseEntity update(WatchableBaseEntity watchableBaseEntity, Long id) {
-        Movie movie=(Movie)watchableBaseEntity;
+    public WatchableBaseEntity update(WatchableBaseEntity watchable, Long id) {
+        Movie movie=(Movie) watchable;
         if (movie == null || id == null)
             throw new RuntimeException("Movie or id can't be null");
         if (movie.getDirector() == null)
@@ -73,7 +73,7 @@ public class MovieServiceImpl implements WatchableService {
         movieToUpdate.setName(movie.getName());
         movieToUpdate.setAgeRestriction(movie.getAgeRestriction());
         movieToUpdate.setDescription(movie.getDescription());
-        return null;
+        return movieToUpdate;
     }
 
     @Override

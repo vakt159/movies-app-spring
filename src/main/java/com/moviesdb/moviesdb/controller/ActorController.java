@@ -1,11 +1,14 @@
 package com.moviesdb.moviesdb.controller;
 
+import com.moviesdb.moviesdb.DTOs.converters.ActorDTOConverter;
+import com.moviesdb.moviesdb.DTOs.dto.ActorDTO;
 import com.moviesdb.moviesdb.models.Actor;
 import com.moviesdb.moviesdb.services.human.ActorServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -21,8 +24,13 @@ public class ActorController {
     }
 
     @GetMapping("/all")
-    public @ResponseBody List<Actor> getAll() {
-        return actorService.findAll();
+    public @ResponseBody List<ActorDTO> getAll() {
+        List<Actor> actors = actorService.findAll();
+        List<ActorDTO> actorDTOS = new ArrayList<>();
+        for (Actor actor : actors){
+            actorDTOS.add(ActorDTOConverter.toactorDTO(actor));
+        }
+        return actorDTOS;
     }
 
     @GetMapping("/{id}")
