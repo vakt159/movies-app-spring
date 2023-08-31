@@ -36,19 +36,19 @@ public class ActorController {
     }
 
     @GetMapping("/actors/{id}")
-    public @ResponseBody Actor getActor(@PathVariable Long id) {
+    public @ResponseBody ActorDTO getActor(@PathVariable Long id) {
         Actor actor = (Actor)actorService.findById(id);
         if (actor == null) {
             throw new NoSuchElementException("Actor with id = " + id + " does not exist");
         } else {
-            return actor;
+            return ActorDTOConverter.toactorDTO(actor);
         }
     }
 
     @PostMapping("/actors/save")
-    public @ResponseBody Actor saveActor(@RequestBody Actor actor) {
+    public @ResponseBody ActorDTO saveActor(@RequestBody Actor actor) {
+        return ActorDTOConverter.toactorDTO((Actor)actorService.save(actor));
 
-        return (Actor)actorService.save(actor);
     }
 
 //    @GetMapping("/find")
@@ -66,10 +66,9 @@ public class ActorController {
         actorService.deleteById(id);
     }
     @PutMapping("/actors/{id}/update")
-    public @ResponseBody Actor updateById(@Valid @RequestBody Actor actor,@PathVariable Long id)
-
+    public @ResponseBody ActorDTO updateById(@Valid @RequestBody Actor actor,@PathVariable Long id)
     {
-        return (Actor) actorService.update(actor, id);
+        return ActorDTOConverter.toactorDTO((Actor) actorService.update(actor, id));
     }
 
     @DeleteMapping("/actors/{actorId}/tvShow/{tvShowId}/delete")

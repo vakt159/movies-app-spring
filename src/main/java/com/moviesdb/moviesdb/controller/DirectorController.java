@@ -1,5 +1,10 @@
 package com.moviesdb.moviesdb.controller;
 
+import com.moviesdb.moviesdb.DTOs.converters.ActorDTOConverter;
+import com.moviesdb.moviesdb.DTOs.converters.DirectorDTOConverter;
+import com.moviesdb.moviesdb.DTOs.dto.ActorDTO;
+import com.moviesdb.moviesdb.DTOs.dto.DirectorDTO;
+import com.moviesdb.moviesdb.models.Actor;
 import com.moviesdb.moviesdb.models.Director;
 import com.moviesdb.moviesdb.models.superclasses.HumanBaseEntity;
 import com.moviesdb.moviesdb.services.human.HumanService;
@@ -12,7 +17,9 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -28,18 +35,25 @@ public class DirectorController {
 
 
     @GetMapping("/directors")
-    public @ResponseBody List<HumanBaseEntity> getAll() {
-        return directorService.findAll();
+    public @ResponseBody List<DirectorDTO> getAll() {
+
+        List<HumanBaseEntity> directors = directorService.findAll();
+        List<DirectorDTO> directorDTOS = new ArrayList<>();
+        for (HumanBaseEntity director : directors){
+            directorDTOS.add(DirectorDTOConverter.todirectorDTO((Director)director));
+        }
+        return directorDTOS;
     }
 
     @GetMapping("/directors/{id}")
-    public @ResponseBody Director findById(@PathVariable(value = "id") Long id) {
-        return (Director) directorService.findById(id);
+    public @ResponseBody DirectorDTO findById(@PathVariable(value = "id") Long id) {
+        return DirectorDTOConverter.todirectorDTO((Director) directorService.findById(id));
     }
 
     @PostMapping("/directors/save")
-    public @ResponseBody Director add(@Valid @RequestBody Director director) {
-        return (Director) directorService.save(director);
+    public @ResponseBody DirectorDTO add(@Valid @RequestBody Director director) {
+        return DirectorDTOConverter.todirectorDTO((Director) directorService.save(director));
+
     }
 
     @DeleteMapping("/directors/{id}/delete")
@@ -48,8 +62,8 @@ public class DirectorController {
     }
 
     @PutMapping("/directors/{id}/update")
-    public @ResponseBody Director edit(@Valid @RequestBody Director director, @PathVariable(value = "id") Long id) {
-        return (Director) directorService.update(director,id);
+    public @ResponseBody DirectorDTO edit(@Valid @RequestBody Director director, @PathVariable(value = "id") Long id) {
+        return DirectorDTOConverter.todirectorDTO((Director) directorService.update(director,id));
     }
 
     @PutMapping("/directors/{directorId}/movie/{movieId}/add")

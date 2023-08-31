@@ -1,5 +1,10 @@
 package com.moviesdb.moviesdb.controller;
 
+import com.moviesdb.moviesdb.DTOs.converters.MovieDTOConverter;
+import com.moviesdb.moviesdb.DTOs.converters.TVShowDTOConverter;
+import com.moviesdb.moviesdb.DTOs.dto.MovieDTO;
+import com.moviesdb.moviesdb.DTOs.dto.TVShowDTO;
+import com.moviesdb.moviesdb.models.Movie;
 import com.moviesdb.moviesdb.models.Director;
 
 import com.moviesdb.moviesdb.models.TVShow;
@@ -14,6 +19,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,27 +35,28 @@ public class TVShowController {
     }
 
     @GetMapping("/tvShows")
-    public @ResponseBody List<WatchableBaseEntity> getAll() {
-        return tvShowService.findAll();
+    public @ResponseBody List<TVShowDTO> getAll() {
+        List<WatchableBaseEntity> tvShows = tvShowService.findAll();
+        List<TVShowDTO> tvShowDTOS = new ArrayList<>();
+        for (WatchableBaseEntity tvShow : tvShows){
+            tvShowDTOS.add(TVShowDTOConverter.totvShowDTO((TVShow) tvShow));
+        }
+        return tvShowDTOS;
     }
 
     @GetMapping("/tvShows/{id}")
-    public @ResponseBody TVShow getTvShowService(@PathVariable Long id) {
+    public @ResponseBody TVShowDTO getTvShowService(@PathVariable Long id) {
         TVShow tvShow = (TVShow) tvShowService.findById(id);
         if (tvShow == null) {
             throw new NoSuchElementException("TV show with id = " + id + " does not exist");
         } else {
-            return tvShow;
+            return TVShowDTOConverter.totvShowDTO(tvShow);
         }
     }
-    @PutMapping("/tvShows/{id}/update")
-    public @ResponseBody TVShow edit(@RequestBody TVShow tvShow, @PathVariable(value = "id") Long id) {
-        return (TVShow) tvShowService.update(tvShow,id);
-    }
     @PostMapping("/tvShows/save")
-    public @ResponseBody TVShow saveTVShow(@Valid @RequestBody TVShow tvShow) {
+    public @ResponseBody TVShowDTO saveTVShow(@Valid @RequestBody TVShow tvShow) {
+        return TVShowDTOConverter.totvShowDTO((TVShow) tvShowService.save(tvShow));
 
-        return (TVShow) tvShowService.save(tvShow);
     }
     @PutMapping("{id}/update")
     public @ResponseBody TVShow updateById(@Valid @RequestBody TVShow tvShow, @PathVariable Long id)
