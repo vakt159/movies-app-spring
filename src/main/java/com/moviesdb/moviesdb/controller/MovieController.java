@@ -1,6 +1,6 @@
 package com.moviesdb.moviesdb.controller;
 
-import com.moviesdb.moviesdb.models.Actor;
+import com.moviesdb.moviesdb.models.Director;
 import com.moviesdb.moviesdb.models.Movie;
 import com.moviesdb.moviesdb.models.superclasses.WatchableBaseEntity;
 import com.moviesdb.moviesdb.services.watchable.MovieServiceImpl;
@@ -20,7 +20,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 @Controller
-@RequestMapping({"/movie", "movie"})
 public class MovieController {
     private final WatchableService movieService;
 
@@ -29,12 +28,12 @@ public class MovieController {
         this.movieService = movieService;
     }
 
-    @GetMapping("/all")
+    @GetMapping("/movies")
     public @ResponseBody List<WatchableBaseEntity> getAll() {
         return movieService.findAll();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/movies/{id}")
     public @ResponseBody Movie getMovie(@PathVariable Long id) {
         Movie movie = (Movie) movieService.findById(id);
         if (movie == null) {
@@ -43,8 +42,9 @@ public class MovieController {
             return movie;
         }
     }
-    @PostMapping
+    @PostMapping("/movies/save")
     public @ResponseBody Movie saveMovie(@Valid @RequestBody Movie movie) {
+
 
         return (Movie) movieService.save(movie);
     }
@@ -54,17 +54,21 @@ public class MovieController {
         return (Movie) movieService.update(movie,id);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/movies/{id}/delete")
     public @ResponseBody void deleteById(@PathVariable Long id) {
         movieService.deleteById(id);
     }
 
-    @PutMapping("{movieId}/delete/distributor/{distId}")
+    @PutMapping("/movies/{movieId}/distributor/{distId}/delete")
     public void deleteDistributorById(@PathVariable Long movieId, @PathVariable Long distId)
     {
         movieService.deleteDistributor(movieId,distId);
     }
-    @PutMapping("{movieId}/delete/actor/{actorId}")
+    @PutMapping("/movies/{id}/update")
+    public @ResponseBody Movie edit(@RequestBody Movie movie, @PathVariable(value = "id") Long id) {
+        return (Movie) movieService.update(movie,id);
+    }
+    @PutMapping("/movies/{movieId}/actor/{actorId}/delete")
     public void deleteActorById(@PathVariable Long movieId, @PathVariable Long actorId)
     {
         movieService.deleteActor(   movieId,actorId);

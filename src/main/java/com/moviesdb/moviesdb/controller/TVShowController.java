@@ -1,6 +1,7 @@
 package com.moviesdb.moviesdb.controller;
 
-import com.moviesdb.moviesdb.models.Movie;
+import com.moviesdb.moviesdb.models.Director;
+
 import com.moviesdb.moviesdb.models.TVShow;
 import com.moviesdb.moviesdb.models.superclasses.WatchableBaseEntity;
 import com.moviesdb.moviesdb.services.watchable.WatchableService;
@@ -19,7 +20,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 @Controller
-@RequestMapping({"/tvShow", "tvShow"})
 public class TVShowController {
 
     private final WatchableService tvShowService;
@@ -28,12 +28,12 @@ public class TVShowController {
         this.tvShowService = twShowService;
     }
 
-    @GetMapping("/all")
+    @GetMapping("/tvShows")
     public @ResponseBody List<WatchableBaseEntity> getAll() {
         return tvShowService.findAll();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/tvShows/{id}")
     public @ResponseBody TVShow getTvShowService(@PathVariable Long id) {
         TVShow tvShow = (TVShow) tvShowService.findById(id);
         if (tvShow == null) {
@@ -42,8 +42,13 @@ public class TVShowController {
             return tvShow;
         }
     }
-    @PostMapping()
+    @PutMapping("/tvShows/{id}/update")
+    public @ResponseBody TVShow edit(@RequestBody TVShow tvShow, @PathVariable(value = "id") Long id) {
+        return (TVShow) tvShowService.update(tvShow,id);
+    }
+    @PostMapping("/tvShows/save")
     public @ResponseBody TVShow saveTVShow(@Valid @RequestBody TVShow tvShow) {
+
         return (TVShow) tvShowService.save(tvShow);
     }
     @PutMapping("{id}/update")
@@ -52,7 +57,7 @@ public class TVShowController {
         return (TVShow) tvShowService.update(tvShow,id);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/tvShows/{id}/delete")
     public @ResponseBody void deleteById(@PathVariable Long id) {
         tvShowService.deleteById(id);
     }
