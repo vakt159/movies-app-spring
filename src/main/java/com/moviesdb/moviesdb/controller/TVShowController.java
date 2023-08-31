@@ -35,7 +35,7 @@ public class TVShowController {
     }
 
     @GetMapping("/tvShows")
-    public @ResponseBody List<TVShowDTO> getAll() {
+    public @ResponseBody List<TVShowDTO> findAll() {
         List<WatchableBaseEntity> tvShows = tvShowService.findAll();
         List<TVShowDTO> tvShowDTOS = new ArrayList<>();
         for (WatchableBaseEntity tvShow : tvShows){
@@ -45,7 +45,7 @@ public class TVShowController {
     }
 
     @GetMapping("/tvShows/{id}")
-    public @ResponseBody TVShowDTO getTvShowService(@PathVariable Long id) {
+    public @ResponseBody TVShowDTO findById(@PathVariable Long id) {
         TVShow tvShow = (TVShow) tvShowService.findById(id);
         if (tvShow == null) {
             throw new NoSuchElementException("TV show with id = " + id + " does not exist");
@@ -54,12 +54,12 @@ public class TVShowController {
         }
     }
     @PostMapping("/tvShows/save")
-    public @ResponseBody TVShowDTO saveTVShow(@Valid @RequestBody TVShow tvShow) {
+    public @ResponseBody TVShowDTO save(@Valid @RequestBody TVShow tvShow) {
         return TVShowDTOConverter.totvShowDTO((TVShow) tvShowService.save(tvShow));
 
     }
     @PutMapping("/tvShow/{id}/update")
-    public @ResponseBody TVShow updateById(@Valid @RequestBody TVShow tvShow, @PathVariable Long id)
+    public @ResponseBody TVShow update(@Valid @RequestBody TVShow tvShow, @PathVariable Long id)
     {
         return (TVShow) tvShowService.update(tvShow,id);
     }

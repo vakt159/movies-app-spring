@@ -33,9 +33,8 @@ public class DirectorController {
         this.directorService = directorService;
     }
 
-
     @GetMapping("/directors")
-    public @ResponseBody List<DirectorDTO> getAll() {
+    public @ResponseBody List<DirectorDTO> findAll() {
 
         List<HumanBaseEntity> directors = directorService.findAll();
         List<DirectorDTO> directorDTOS = new ArrayList<>();
@@ -51,7 +50,7 @@ public class DirectorController {
     }
 
     @PostMapping("/directors/save")
-    public @ResponseBody DirectorDTO add(@Valid @RequestBody Director director) {
+    public @ResponseBody DirectorDTO save(@Valid @RequestBody Director director) {
         return DirectorDTOConverter.todirectorDTO((Director) directorService.save(director));
 
     }
@@ -62,7 +61,7 @@ public class DirectorController {
     }
 
     @PutMapping("/directors/{id}/update")
-    public @ResponseBody DirectorDTO edit(@Valid @RequestBody Director director, @PathVariable(value = "id") Long id) {
+    public @ResponseBody DirectorDTO update(@Valid @RequestBody Director director, @PathVariable(value = "id") Long id) {
         return DirectorDTOConverter.todirectorDTO((Director) directorService.update(director,id));
     }
 

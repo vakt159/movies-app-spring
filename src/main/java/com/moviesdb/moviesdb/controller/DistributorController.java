@@ -2,13 +2,9 @@ package com.moviesdb.moviesdb.controller;
 
 
 import com.moviesdb.moviesdb.DTOs.converters.DistributorDTOConverter;
-import com.moviesdb.moviesdb.DTOs.converters.TVShowDTOConverter;
 import com.moviesdb.moviesdb.DTOs.dto.DistributorDTO;
-import com.moviesdb.moviesdb.DTOs.dto.TVShowDTO;
 import com.moviesdb.moviesdb.models.Distributor;
-import com.moviesdb.moviesdb.models.TVShow;
 import com.moviesdb.moviesdb.models.superclasses.NonHumanBaseEntity;
-import com.moviesdb.moviesdb.models.superclasses.WatchableBaseEntity;
 import com.moviesdb.moviesdb.services.nonhuman.NonHumanService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -31,7 +27,7 @@ public class DistributorController {
     }
 
     @GetMapping("/distributors")
-    public @ResponseBody List<DistributorDTO> getAll() {
+    public @ResponseBody List<DistributorDTO> findAll() {
         List<NonHumanBaseEntity> distributors = nonHumanService.findAll();
         List<DistributorDTO> distributorDTOS = new ArrayList<>();
         for (NonHumanBaseEntity distributor : distributors) {
@@ -56,17 +52,17 @@ public class DistributorController {
     }
 
     @PostMapping("/distributors/save")
-    public @ResponseBody DistributorDTO add(@Valid @RequestBody Distributor distributor) {
+    public @ResponseBody DistributorDTO save(@Valid @RequestBody Distributor distributor) {
         return DistributorDTOConverter.todistributorDTO((Distributor) nonHumanService.save(distributor));
     }
 
     @DeleteMapping("/distributors/{id}/delete")
     public @ResponseBody void deleteById(@PathVariable(value = "id") Long id) {
-        nonHumanService.deleteDistributorById(id);
+        nonHumanService.deleteById(id);
     }
 
     @PutMapping("/distributors/{id}/update")
-    public @ResponseBody Distributor edit(@Valid @RequestBody Distributor distributor, @PathVariable(value = "id") Long id) {
+    public @ResponseBody Distributor update(@Valid @RequestBody Distributor distributor, @PathVariable(value = "id") Long id) {
         return (Distributor) nonHumanService.update(id, distributor);
     }
 
@@ -82,21 +78,15 @@ public class DistributorController {
         nonHumanService.addTVShow(tvShowId, distributorId);
     }
 
-    ;
-
     @PutMapping("/distributors/{id}/movie/{movieId}/delete")
     public @ResponseBody void deleteMovie(@PathVariable Long id, @PathVariable Long movieId) {
         nonHumanService.deleteMovie(id, movieId);
     }
 
-    ;
-
     @PutMapping("/distributors/{id}/TVShow/{TVShowId}/delete")
     public @ResponseBody void deleteTVShow(@PathVariable Long id, @PathVariable Long TVShowId) {
         nonHumanService.deleteTVShow(id, TVShowId);
     }
-
-    ;
 
     @ExceptionHandler
     public ResponseEntity<String> onMissingDistributor(NoSuchElementException ex) {
