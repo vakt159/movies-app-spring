@@ -2,18 +2,21 @@ package com.moviesdb.moviesdb.services.human;
 
 import com.moviesdb.moviesdb.models.Movie;
 import com.moviesdb.moviesdb.models.TVShow;
+import com.moviesdb.moviesdb.models.superclasses.HumanBaseEntity;
+import com.moviesdb.moviesdb.models.superclasses.WatchableBaseEntity;
 import com.moviesdb.moviesdb.persistence.ActorDAO;
 import com.moviesdb.moviesdb.models.Actor;
 
 import com.moviesdb.moviesdb.services.watchable.TVShowServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
-public class ActorServiceImpl implements HumanService<Actor> {
+public class ActorServiceImpl implements HumanService {
     private final ActorDAO actorDAO;
     private final TVShowServiceImpl tvShowService;
 
@@ -33,18 +36,20 @@ public class ActorServiceImpl implements HumanService<Actor> {
     }
 
     @Override
-    public List<Actor> findAll() {
+    public List<HumanBaseEntity> findAll() {
         List<Actor> actors = actorDAO.findAll();
-        if (actors.isEmpty() || actors == null)
-            return null;
-        return actors;
+        if (actors == null || actors.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<HumanBaseEntity> humanActors = new ArrayList<>(actors);
+        return humanActors;
     }
 
     @Override
-    public Actor save(Actor actor) {
+    public HumanBaseEntity save(HumanBaseEntity actor) {
         if (actor == null)
             throw new RuntimeException("Actor doesn't exist");
-        return actorDAO.save(actor);
+        return actorDAO.save((Actor)actor);
     }
 
     @Override
@@ -69,7 +74,7 @@ public class ActorServiceImpl implements HumanService<Actor> {
     }
 
     @Override
-    public Actor update(Actor actor, Long id) {
+    public HumanBaseEntity update(HumanBaseEntity actor, Long id) {
         Actor origin_actor = findById(id);
         if (origin_actor == null){
             return null;
@@ -83,8 +88,8 @@ public class ActorServiceImpl implements HumanService<Actor> {
         }
     }
 
-
-    public void deleteTVShowFromActor(Long actor_id, Long tvShow_id) {
+    @Override
+    public void deleteTVShow(Long actor_id, Long tvShow_id) {
         Actor origin_actor = findById(actor_id);
         TVShow tvShow = tvShowService.findById(tvShow_id);
         if (origin_actor == null){
@@ -102,7 +107,12 @@ public class ActorServiceImpl implements HumanService<Actor> {
         }
     }
 
-    public Actor saveTVShowToActor(Long actor_id, Long tvShow_id) {
+    @Override
+    public void deleteMovie(Long humanId, Long movieId) {
+
+    }
+    @Override
+    public HumanBaseEntity saveTVShow(Long actor_id, Long tvShow_id) {
         Actor origin_actor = findById(actor_id);
         TVShow tvShow = tvShowService.findById(tvShow_id);
         if (origin_actor == null){
@@ -116,6 +126,11 @@ public class ActorServiceImpl implements HumanService<Actor> {
             tvShowService.save(tvShow);
             return origin_actor;
         }
+    }
+
+    @Override
+    public HumanBaseEntity saveMovie(Long humanId, Long movieId) {
+        return null;
     }
 
     public Actor findActorByFirstNameAndLastName(String firstName, String lastName) {
