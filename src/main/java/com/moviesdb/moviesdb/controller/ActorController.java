@@ -5,19 +5,19 @@ import com.moviesdb.moviesdb.DTOs.dto.ActorDTO;
 import com.moviesdb.moviesdb.models.Actor;
 import com.moviesdb.moviesdb.models.superclasses.HumanBaseEntity;
 import com.moviesdb.moviesdb.services.human.HumanService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 import org.springframework.http.HttpStatus;
 
 @Controller
-@RequestMapping({"/actor", "actor"})
 public class ActorController {
     private final HumanService actorService;
 
@@ -25,7 +25,7 @@ public class ActorController {
         this.actorService = actorService;
     }
 
-    @GetMapping("/all")
+    @GetMapping("/actors")
     public @ResponseBody List<ActorDTO> getAll() {
         List<HumanBaseEntity> actors = actorService.findAll();
         List<ActorDTO> actorDTOS = new ArrayList<>();
@@ -35,7 +35,7 @@ public class ActorController {
         return actorDTOS;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/actors/{id}")
     public @ResponseBody ActorDTO getActor(@PathVariable Long id) {
         Actor actor = (Actor)actorService.findById(id);
         if (actor == null) {
@@ -45,9 +45,10 @@ public class ActorController {
         }
     }
 
-    @PostMapping
+    @PostMapping("/actors/save")
     public @ResponseBody ActorDTO saveActor(@RequestBody Actor actor) {
         return ActorDTOConverter.toactorDTO((Actor)actorService.save(actor));
+
     }
 
 //    @GetMapping("/find")
@@ -60,22 +61,22 @@ public class ActorController {
 //        }
 //    }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/actors/{id}/delete")
     public @ResponseBody void deleteById(@PathVariable Long id) {
         actorService.deleteById(id);
     }
-    @PutMapping("{id}/update")
-    public @ResponseBody ActorDTO updateById(@RequestBody Actor actor,@PathVariable Long id)
+    @PutMapping("/actors/{id}/update")
+    public @ResponseBody ActorDTO updateById(@Valid @RequestBody Actor actor,@PathVariable Long id)
     {
         return ActorDTOConverter.toactorDTO((Actor) actorService.update(actor, id));
     }
 
-    @DeleteMapping("{actorId}/delete/tvShow/{tvShowId}")
+    @DeleteMapping("/actors/{actorId}/tvShow/{tvShowId}/delete")
     public @ResponseBody void deleteTVShow(@PathVariable Long actorId, @PathVariable Long tvShowId){
         actorService.deleteTVShow(actorId,tvShowId);
     }
 
-    @PutMapping("{actorId}/save/tvShow/{tvShowId}")
+    @PutMapping("/actors/{actorId}/tvShow/{tvShowId}/save")
     public @ResponseBody void saveTVShowToActor(@PathVariable Long actorId, @PathVariable Long tvShowId){
          actorService.addTVShow(actorId,tvShowId);
     }
@@ -83,5 +84,18 @@ public class ActorController {
     @ExceptionHandler
     public ResponseEntity<String> ActorException(NoSuchElementException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
     }
 }
