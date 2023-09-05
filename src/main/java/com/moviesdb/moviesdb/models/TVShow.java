@@ -15,7 +15,6 @@ import java.util.Set;
 @Table(name = "tvShow")
 public class TVShow extends WatchableBaseEntity {
 
-    @JsonIgnore
     @ManyToMany
     @JoinTable(name = "tvShow_actor",
             joinColumns = @JoinColumn(name = "tvShow_id"),
