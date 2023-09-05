@@ -150,11 +150,12 @@ public class ActorServiceImpl implements HumanService {
         }
     }
 
-//    public Actor findActorByFirstNameAndLastName(String firstName, String lastName) {
-//        Actor foundActor = actorDAO.findActorByFirstNameAndLastName(firstName, lastName);
-//        if (foundActor == null)
-//            throw new RuntimeException("Actor doesn't exist");
-//        return foundActor;
-//    }
+    public Actor findByFirstNameAndLastName(String firstName, String lastName) {
+        Optional<Actor> foundActor = actorDAO.findActorByFirstNameAndLastName(firstName, lastName);
+        if (foundActor.isEmpty())
+            throw new NoSuchElementException("Actor with first name = " + firstName +
+                    "and last name = " + lastName + " does not exist");
+        return foundActor.get();
+    }
 
 }

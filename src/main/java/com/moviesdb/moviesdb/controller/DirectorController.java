@@ -2,6 +2,7 @@ package com.moviesdb.moviesdb.controller;
 
 import com.moviesdb.moviesdb.DTOs.converters.DirectorDTOConverter;
 import com.moviesdb.moviesdb.DTOs.dto.DirectorDTO;
+import com.moviesdb.moviesdb.models.Actor;
 import com.moviesdb.moviesdb.models.Director;
 import com.moviesdb.moviesdb.models.superclasses.HumanBaseEntity;
 import com.moviesdb.moviesdb.services.human.HumanService;
@@ -39,6 +40,11 @@ public class DirectorController {
             directorDTOS.add(DirectorDTOConverter.todirectorDTO((Director)director));
         }
         return directorDTOS;
+    }
+    @GetMapping("/directors/find")
+    public @ResponseBody DirectorDTO findByFirstLastName(@RequestBody Map<String,String> fullname) {
+        return DirectorDTOConverter.todirectorDTO((Director) directorService.
+                findByFirstNameAndLastName(fullname.get("firstname"),fullname.get("lastname")));
     }
 
     @GetMapping("/directors/id/{id}")

@@ -55,6 +55,8 @@ public class TVShowController {
     }
     @PostMapping("/tvShows/save")
     public @ResponseBody TVShowDTO save(@Valid @RequestBody TVShow tvShow) {
+        System.out.println("------------ : " + tvShow.getTotalEpisodes());
+        System.out.println("------------ : " + tvShow.getActors());
         return TVShowDTOConverter.totvShowDTO((TVShow) tvShowService.save(tvShow));
 
     }

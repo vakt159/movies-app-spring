@@ -51,15 +51,11 @@ public class ActorController {
 
     }
 
-//    @GetMapping("/find")
-//    public @ResponseBody Actor findByFirstLastName(@RequestBody String firstName, String lastName) {
-//        Actor actor = actorService.findActorByFirstNameAndLastName(firstName, lastName);
-//        if (actor == null) {
-//            throw new NoSuchElementException("Actor with first name = " + firstName + "and last name = " + lastName + " does not exist");
-//        } else {
-//            return actorService.findActorByFirstNameAndLastName(firstName, lastName);
-//        }
-//    }
+    @GetMapping("/actors/find")
+    public @ResponseBody ActorDTO findByFirstLastName(@RequestBody Map<String,String> fullname) {
+        return ActorDTOConverter.toactorDTO((Actor)actorService
+                .findByFirstNameAndLastName(fullname.get("firstname"), fullname.get("lastname")));
+    }
 
     @DeleteMapping("/actors/{id}/delete")
     public @ResponseBody void deleteById(@PathVariable Long id) {
