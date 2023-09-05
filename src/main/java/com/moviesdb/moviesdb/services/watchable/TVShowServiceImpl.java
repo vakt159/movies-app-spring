@@ -82,12 +82,12 @@ public class TVShowServiceImpl implements WatchableService  {
     @Override
     public void deleteDistributor(Long watchableId, Long distributorId) {
         TVShow origin_tvShow = findById(watchableId);
-        Distributor distributor = distributorService.findDistributorById(watchableId);
+        Distributor distributor = distributorService.findDistributorById(distributorId);
         if (origin_tvShow == null){
             throw new NoSuchElementException("TVShow with id = " + watchableId + " does not exist");
         } else if(distributor == null){
             throw new NoSuchElementException("Distributor with id = " + distributorId + " does not exist");
-        } else if(!origin_tvShow.getDistributors().contains(distributor)){
+        } else if(!origin_tvShow.containsDistributor(distributor)){
             throw new NoSuchElementException("TVShow with id = " + watchableId + " does not have distributor with id = " + distributorId);
         }
         else{
@@ -106,7 +106,7 @@ public class TVShowServiceImpl implements WatchableService  {
             throw new NoSuchElementException("TVSHow with id = " + watchableId + " does not exist");
         } else if(actor == null){
             throw new NoSuchElementException("Actor with id = " + actorId + " does not exist");
-        } else if(!origin_tvShow.getActors().contains(actor)){
+        } else if(!origin_tvShow.containsActor(actor)){
             throw new NoSuchElementException("Actor with id = " + actorId + " have not played in TV show with id = " + watchableId);
         }
         else{

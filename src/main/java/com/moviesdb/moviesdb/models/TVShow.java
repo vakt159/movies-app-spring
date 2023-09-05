@@ -68,4 +68,13 @@ public class TVShow extends WatchableBaseEntity {
         setDirector(director);
         director.getTvShows().add(this);
     }
+    public boolean containsActor(Actor actor)
+    {
+        return getActors().contains(actor);
+    }
+    public boolean containsDistributor(Distributor distributor)
+    {
+        return getDistributors().contains(distributor);
+    }
+
 }

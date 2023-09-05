@@ -61,7 +61,7 @@ public class MovieController {
         return MovieDTOConverter.tomovieDTO((Movie)movieService.update(movie,id));
     }
     @PutMapping("/movies/{movieId}/distributor/{distId}/delete")
-    public void deleteDistributor(@PathVariable Long movieId, @PathVariable Long distId)
+    public @ResponseBody void deleteDistributor(@PathVariable Long movieId, @PathVariable Long distId)
     {
         movieService.deleteDistributor(movieId,distId);
     }
