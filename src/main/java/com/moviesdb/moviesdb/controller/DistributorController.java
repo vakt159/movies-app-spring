@@ -36,12 +36,14 @@ public class DistributorController {
         return distributorDTOS;
     }
 
-    @GetMapping("/distributors/findByName")
-    public @ResponseBody Distributor findByName(@RequestBody Map<String, String> body) {
-        return (Distributor) nonHumanService.findByName(body.get("name"));
+    //Not implemented
+    @GetMapping("/distributors/name")
+    public @ResponseBody Distributor findByName(@RequestBody Map<String,String> name) {
+        return (Distributor) nonHumanService.findByName(name.get("name"));
     }
 
-    @GetMapping("/distributors/{id}")
+
+    @GetMapping("/distributors/id/{id}")
     public @ResponseBody DistributorDTO findById(@PathVariable(value = "id") Long id) {
         Distributor distributor = (Distributor) nonHumanService.findDistributorById(id);
         if (distributor == null) {
@@ -62,8 +64,8 @@ public class DistributorController {
     }
 
     @PutMapping("/distributors/{id}/update")
-    public @ResponseBody Distributor update(@Valid @RequestBody Distributor distributor, @PathVariable(value = "id") Long id) {
-        return (Distributor) nonHumanService.update(id, distributor);
+    public @ResponseBody DistributorDTO update(@Valid @RequestBody Distributor distributor, @PathVariable(value = "id") Long id) {
+        return DistributorDTOConverter.todistributorDTO((Distributor) nonHumanService.update(id, distributor));
     }
 
     @PutMapping("/distributors/{distributorId}/movie/{movieId}/add")

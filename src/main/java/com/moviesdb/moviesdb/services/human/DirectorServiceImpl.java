@@ -32,7 +32,10 @@ public class DirectorServiceImpl implements HumanService {
             throw new RuntimeException("Id doesn't exist");
         }
             Optional<Director> directorOptional=directorDAO.findById(id);
-        return directorOptional.orElse(null);
+        if(directorOptional.isPresent())
+        return directorOptional.get();
+        else
+            throw new RuntimeException("Director with this id doesn't exist");
     }
     @Override
     public List<HumanBaseEntity> findAll() {
@@ -81,9 +84,8 @@ public class DirectorServiceImpl implements HumanService {
 
         if(optionalTVShow.isPresent()){
             TVShow tvShow = optionalTVShow.get();
-            tvShow.setDirector(null);
+            findedDirector.removeTvShow(tvShow);
             tvShowDAO.save(tvShow);
-            findedDirector.getTvShows().remove(tvShow);
             directorDAO.save(findedDirector);
         }else{
             throw new NoSuchElementException("TVShow with id = " + tvShowId + " was not found");
@@ -97,9 +99,8 @@ public class DirectorServiceImpl implements HumanService {
         Optional<Movie> optionalMovie = movieDAO.findById(movieId);
         if(optionalMovie.isPresent()) {
             Movie movie = optionalMovie.get();
-            movie.setDirector(null);
+            findedDirector.removeMovie(movie);
             movieDAO.save(movie);
-            findedDirector.getMovies().remove(movie);
             directorDAO.save(findedDirector);
         }
     }
@@ -110,9 +111,9 @@ public class DirectorServiceImpl implements HumanService {
         Optional<TVShow> opTvShow = tvShowDAO.findById(tvShowId);
 
         if(opTvShow.isPresent()){
-            director.getTvShows().add(opTvShow.get());
+            TVShow tvShow=opTvShow.get();
+            director.addTvShow(tvShow);
             directorDAO.save(director);
-            opTvShow.get().setDirector(director);
             tvShowDAO.save(opTvShow.get());
         }else{
             throw new NoSuchElementException("TVShow with id = " + tvShowId + " was not found");
@@ -123,11 +124,10 @@ public class DirectorServiceImpl implements HumanService {
     public void addMovie(Long movieId, Long directorId) {
         Director director= directorDAO.findById(directorId).get();
         Optional<Movie> opMovie = movieDAO.findById(movieId);
-
         if(opMovie.isPresent()){
-            director.getMovies().add(opMovie.get());
+            Movie movie=opMovie.get();
+            director.addMovie(movie);
             directorDAO.save(director);
-            opMovie.get().setDirector(director);
             movieDAO.save(opMovie.get());
         }else{
             throw new NoSuchElementException("Movie with id = " + movieId + " was not found");

@@ -2,9 +2,7 @@ package com.moviesdb.moviesdb.models.superclasses;
 
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 @MappedSuperclass
@@ -22,14 +20,14 @@ public class WatchableBaseEntity {
     @Column(name = "name")
     private String name;
 
-
     @NotNull
     @NotBlank(message = "Description is mandatory")
     @Column(name = "description",length = 1000)
     private String description;
 
     @NotNull
-    @NotBlank(message = "AgeRestriction is mandatory")
+    @Min(value= 1,message = "AgeRestriction has to be >1")
+    @Max(value = 99,message = "AgeRestriction has to be <99")
     @Column(name = "ageRestriction")
     private Short ageRestriction;
 

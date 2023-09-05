@@ -20,9 +20,11 @@ public class ActorDTOConverter {
         }else birthday = null;
         Set<Long> movies = new HashSet<>();
         Set<Long> tvShows = new HashSet<>();
+        if(!actor.getMovies().isEmpty())
         for (Movie movie : actor.getMovies()){
             movies.add(movie.getId());
         }
+        if(! actor.getTvShows().isEmpty())
         for (TVShow tvShow : actor.getTvShows()){
             tvShows.add(tvShow.getId());
         }

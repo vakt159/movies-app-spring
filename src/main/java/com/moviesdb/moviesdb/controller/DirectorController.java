@@ -1,10 +1,7 @@
 package com.moviesdb.moviesdb.controller;
 
-import com.moviesdb.moviesdb.DTOs.converters.ActorDTOConverter;
 import com.moviesdb.moviesdb.DTOs.converters.DirectorDTOConverter;
-import com.moviesdb.moviesdb.DTOs.dto.ActorDTO;
 import com.moviesdb.moviesdb.DTOs.dto.DirectorDTO;
-import com.moviesdb.moviesdb.models.Actor;
 import com.moviesdb.moviesdb.models.Director;
 import com.moviesdb.moviesdb.models.superclasses.HumanBaseEntity;
 import com.moviesdb.moviesdb.services.human.HumanService;
@@ -44,7 +41,7 @@ public class DirectorController {
         return directorDTOS;
     }
 
-    @GetMapping("/directors/{id}")
+    @GetMapping("/directors/id/{id}")
     public @ResponseBody DirectorDTO findById(@PathVariable(value = "id") Long id) {
         return DirectorDTOConverter.todirectorDTO((Director) directorService.findById(id));
     }
