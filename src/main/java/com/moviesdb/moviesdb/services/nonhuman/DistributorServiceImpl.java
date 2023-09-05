@@ -1,5 +1,6 @@
 package com.moviesdb.moviesdb.services.nonhuman;
 
+import com.moviesdb.moviesdb.models.Actor;
 import com.moviesdb.moviesdb.models.Distributor;
 import com.moviesdb.moviesdb.models.Movie;
 import com.moviesdb.moviesdb.models.TVShow;
@@ -30,7 +31,6 @@ public class DistributorServiceImpl implements NonHumanService {
 
     @Override
     public List<NonHumanBaseEntity> findAll() {
-
         List<Distributor> distributors = distributorDAO.findAll();
         if (distributors == null || distributors.isEmpty())
             return new ArrayList<>();
@@ -39,14 +39,22 @@ public class DistributorServiceImpl implements NonHumanService {
     }
 
     @Override
-    @Transactional
     public void deleteById(Long id) {
-        if (distributorDAO.findById(id).isPresent()) {
-            distributorDAO.deleteById(id);
+        Distributor distributor = findDistributorById(id);
+        if (distributor == null) {
+            throw new NoSuchElementException("Distributor with id = " + id + " does not exist");
         } else {
-            throw new NoSuchElementException("Distributor with id = " + id + " is not found");
+            for (Movie movie : distributor.getMovies()) {
+                movie.getDistributors().remove(distributor);
+            }
+            for (TVShow tvShow : distributor.getTvShows()) {
+                tvShow.getDistributors().remove(distributor);
+            }
+            distributor.getMovies().clear();
+            distributor.getTvShows().clear();
+            distributorDAO.deleteById(id);
+            distributorDAO.flush();
         }
-
     }
 
     @Override
@@ -94,12 +102,8 @@ public class DistributorServiceImpl implements NonHumanService {
     public void deleteTVShow(Long distributorId, Long tvShowId) {
         Distributor distributor = this.findDistributorById(distributorId);
         TVShow tvShow = tvShowDAO.findById(tvShowId).get();
-
-        Set<Distributor> distributorSet = tvShow.getDistributors().stream().
-                filter(distributor1 -> distributor1.getId() != distributorId).collect(Collectors.toSet());
-        tvShow.setDistributors(distributorSet);
+        distributor.removeTvShow(tvShow);
         tvShowDAO.save(tvShow);
-        distributor.getTvShows().remove(tvShow);
         distributorDAO.save(distributor);
     }
 
@@ -107,12 +111,8 @@ public class DistributorServiceImpl implements NonHumanService {
     public void deleteMovie(Long distributorId, Long movieId) {
         Distributor distributor = this.findDistributorById(distributorId);
         Movie movie = movieDAO.findById(movieId).get();
-
-        Set<Distributor> distributorSet = movie.getDistributors().stream().
-                filter(distributor1 -> distributor1.getId() != distributorId).collect(Collectors.toSet());
-        movie.setDistributors(distributorSet);
+        distributor.removeMovie(movie);
         movieDAO.save(movie);
-        distributor.getMovies().remove(movie);
         distributorDAO.save(distributor);
     }
 
@@ -120,11 +120,9 @@ public class DistributorServiceImpl implements NonHumanService {
     public void addTVShow(Long tvShowId, Long distributorId) {
         Distributor distributor = distributorDAO.findById(distributorId).get();
         Optional<TVShow> opTvShow = tvShowDAO.findById(tvShowId);
-
         if (opTvShow.isPresent()) {
-            distributor.getTvShows().add(opTvShow.get());
+            distributor.addTvShow(opTvShow.get());
             distributorDAO.save(distributor);
-            opTvShow.get().getDistributors().add(distributor);
             tvShowDAO.save(opTvShow.get());
         } else {
             throw new NoSuchElementException("TVShow with id = " + tvShowId + " was not found");
@@ -135,11 +133,9 @@ public class DistributorServiceImpl implements NonHumanService {
     public void addMovie(Long movieId, Long distributorId) {
         Distributor distributor = distributorDAO.findById(distributorId).get();
         Optional<Movie> opMovie = movieDAO.findById(movieId);
-
         if (opMovie.isPresent()) {
-            distributor.getMovies().add(opMovie.get());
+            distributor.addMovie(opMovie.get());
             distributorDAO.save(distributor);
-            opMovie.get().getDistributors().add(distributor);
             movieDAO.save(opMovie.get());
         } else {
             throw new NoSuchElementException("Movie with id = " + movieId + " was not found");

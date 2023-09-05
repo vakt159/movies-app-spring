@@ -62,4 +62,12 @@ public class Movie extends WatchableBaseEntity {
         setDirector(director);
         director.getMovies().add(this);
     }
+    public boolean containsActor(Actor actor)
+    {
+        return getActors().contains(actor);
+    }
+    public boolean containsDistributor(Distributor distributor)
+    {
+        return getDistributors().contains(distributor);
+    }
 }

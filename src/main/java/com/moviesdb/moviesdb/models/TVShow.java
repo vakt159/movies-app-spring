@@ -15,7 +15,6 @@ import java.util.Set;
 @Table(name = "tvShow")
 public class TVShow extends WatchableBaseEntity {
 
-    @JsonIgnore
     @ManyToMany
     @JoinTable(name = "tvShow_actor",
             joinColumns = @JoinColumn(name = "tvShow_id"),
@@ -69,4 +68,13 @@ public class TVShow extends WatchableBaseEntity {
         setDirector(director);
         director.getTvShows().add(this);
     }
+    public boolean containsActor(Actor actor)
+    {
+        return getActors().contains(actor);
+    }
+    public boolean containsDistributor(Distributor distributor)
+    {
+        return getDistributors().contains(distributor);
+    }
+
 }
