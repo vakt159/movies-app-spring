@@ -21,7 +21,8 @@ public class MovieDTO extends WatchableBaseEntityDTO {
 
     private Set<Long> distributors;
 
-    public MovieDTO(Long id, String name, String description, Short ageRestriction, Short duration, Byte rating, Set<Long> actors, Long director_id, Set<Long> distributors) {
+    public MovieDTO(Long id, String name, String description, Short ageRestriction, Short duration, Byte rating,
+                    Set<Long> actors, Long director_id, Set<Long> distributors) {
         super(id, name, description, ageRestriction, duration, rating);
         this.actors = actors;
         this.director_id = director_id;
