@@ -14,9 +14,11 @@ public class MovieDTOConverter {
     public static MovieDTO tomovieDTO(Movie movie){
         Set<Long> actors = new HashSet<>();
         Set<Long> distributors = new HashSet<>();
+        if(!movie.getActors().isEmpty())
         for (Actor actor : movie.getActors()){
             actors.add(actor.getId());
         }
+        if(!movie.getDistributors().isEmpty())
         for (Distributor distributor : movie.getDistributors()){
             distributors.add(distributor.getId());
         }

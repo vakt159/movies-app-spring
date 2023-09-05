@@ -2,11 +2,8 @@ package com.moviesdb.moviesdb.controller;
 
 import com.moviesdb.moviesdb.DTOs.converters.MovieDTOConverter;
 import com.moviesdb.moviesdb.DTOs.dto.MovieDTO;
-import com.moviesdb.moviesdb.models.Director;
 import com.moviesdb.moviesdb.models.Movie;
-import com.moviesdb.moviesdb.models.superclasses.HumanBaseEntity;
 import com.moviesdb.moviesdb.models.superclasses.WatchableBaseEntity;
-import com.moviesdb.moviesdb.services.watchable.MovieServiceImpl;
 import com.moviesdb.moviesdb.services.watchable.WatchableService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -42,7 +39,7 @@ public class MovieController {
         return movieDTOS;
     }
 
-    @GetMapping("/movies/{id}")
+    @GetMapping("/movies/id/{id}")
     public @ResponseBody MovieDTO findById(@PathVariable Long id) {
         Movie movie = (Movie) movieService.findById(id);
         if (movie == null) {
@@ -59,20 +56,40 @@ public class MovieController {
     public @ResponseBody void deleteById(@PathVariable Long id) {
         movieService.deleteById(id);
     }
-
+    @PutMapping("/movies/{id}/update")
+    public @ResponseBody MovieDTO update(@RequestBody Movie movie, @PathVariable(value = "id") Long id) {
+        return MovieDTOConverter.tomovieDTO((Movie)movieService.update(movie,id));
+    }
     @PutMapping("/movies/{movieId}/distributor/{distId}/delete")
     public void deleteDistributor(@PathVariable Long movieId, @PathVariable Long distId)
     {
         movieService.deleteDistributor(movieId,distId);
     }
-    @PutMapping("/movies/{id}/update")
-    public @ResponseBody Movie update(@RequestBody Movie movie, @PathVariable(value = "id") Long id) {
-        return (Movie) movieService.update(movie,id);
-    }
+
     @PutMapping("/movies/{movieId}/actor/{actorId}/delete")
-    public void deleteActor(@PathVariable Long movieId, @PathVariable Long actorId)
+    public @ResponseBody void deleteActor(@PathVariable Long movieId, @PathVariable Long actorId)
     {
-        movieService.deleteActor(   movieId,actorId);
+        movieService.deleteActor(movieId,actorId);
+    }
+    @PutMapping("/movies/{movieId}/actor/{actorId}/add")
+    public @ResponseBody void addActor(@PathVariable Long movieId, @PathVariable Long actorId)
+    {
+        movieService.addActor(movieId,actorId);
+    }
+    @PutMapping("/movies/{movieId}/distributor/{distId}/add")
+    public @ResponseBody void addDistributor(@PathVariable Long movieId, @PathVariable Long distId)
+    {
+        movieService.addDistributor(movieId,distId);
+    }
+    @GetMapping("/movies/name/{name}")
+    public @ResponseBody List<MovieDTO> findByName(@PathVariable String name)
+    {
+        List<WatchableBaseEntity> movies = movieService.findByName(name);
+        List<MovieDTO> movieDTOS = new ArrayList<>();
+        for (WatchableBaseEntity movie : movies){
+            movieDTOS.add(MovieDTOConverter.tomovieDTO((Movie)movie));
+        }
+        return movieDTOS;
     }
     @ExceptionHandler
     public ResponseEntity<String> MovieException(NoSuchElementException ex) {

@@ -21,4 +21,25 @@ public class Actor extends HumanBaseEntity {
 //    @JsonIgnore
     @ManyToMany(mappedBy = "actors")
     private Set<TVShow> tvShows;
+    public void addMovie(Movie movie)
+    {
+        this.movies.add(movie);
+        movie.getActors().add(this);
+    }
+    public void addTvShow(TVShow tvShow)
+    {
+        this.tvShows.add(tvShow);
+        tvShow.getActors().add(this);
+    }
+    public void removeMovie(Movie movie)
+    {
+        this.movies.remove(movie);
+        movie.getActors().remove(this);
+    }
+    public void removeTvShow(TVShow tvShow)
+    {
+        this.tvShows.remove(tvShow);
+        tvShow.getActors().remove(this);
+    }
+
 }

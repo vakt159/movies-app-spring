@@ -16,9 +16,11 @@ public class DistributorDTOConverter {
 
         Set<Long> movies = new HashSet<>();
         Set<Long> tvShows = new HashSet<>();
+        if(!distributor.getMovies().isEmpty())
         for (Movie movie : distributor.getMovies()){
             movies.add(movie.getId());
         }
+        if(!distributor.getTvShows().isEmpty())
         for (TVShow tvShow : distributor.getTvShows()){
             tvShows.add(tvShow.getId());
         }

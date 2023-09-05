@@ -29,4 +29,37 @@ public class Movie extends WatchableBaseEntity {
             joinColumns = @JoinColumn(name = "movie_id"),
             inverseJoinColumns = @JoinColumn(name = "distributor_id"))
     private Set<Distributor> distributors;
+
+
+    public void addActor(Actor actor)
+    {
+        this.actors.add(actor);
+        actor.getMovies().add(this);
+    }
+    public void addDistributor(Distributor distributor)
+    {
+        this.distributors.add(distributor);
+        distributor.getMovies().add(this);
+    }
+    public void removeActor(Actor actor)
+    {
+        this.actors.remove(actor);
+        actor.getMovies().remove(this);
+    }
+    public void removeDistributor(Distributor distributor)
+    {
+        this.distributors.remove(distributor);
+        distributor.getMovies().remove(this);
+    }
+    public void removeDirector()
+    {
+        Director director=getDirector();
+        director.getMovies().remove(this);
+        setDirector(null);
+    }
+    public void addDirector(Director director)
+    {
+        setDirector(director);
+        director.getMovies().add(this);
+    }
 }

@@ -80,6 +80,15 @@ public class ActorController {
     public @ResponseBody void addTVShow(@PathVariable Long actorId, @PathVariable Long tvShowId){
          actorService.addTVShow(actorId,tvShowId);
     }
+    @DeleteMapping("/actors/{actorId}/movie/{movieId}/delete")
+    public @ResponseBody void deleteMovie(@PathVariable Long actorId, @PathVariable Long movieId){
+        actorService.deleteTVShow(actorId,movieId);
+    }
+
+    @PutMapping("/actors/{actorId}/movie/{movieId}/save")
+    public @ResponseBody void addMovie(@PathVariable Long actorId, @PathVariable Long movieId){
+        actorService.addMovie(actorId,movieId);
+    }
 
     @ExceptionHandler
     public ResponseEntity<String> ActorException(NoSuchElementException ex) {

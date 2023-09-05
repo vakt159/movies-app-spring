@@ -1,7 +1,5 @@
 package com.moviesdb.moviesdb.DTOs.converters;
 
-
-
 import com.moviesdb.moviesdb.DTOs.dto.TVShowDTO;
 import com.moviesdb.moviesdb.models.Actor;
 import com.moviesdb.moviesdb.models.Distributor;
@@ -15,9 +13,11 @@ public class TVShowDTOConverter {
     public static TVShowDTO totvShowDTO(TVShow tvShow){
         Set<Long> actors = new HashSet<>();
         Set<Long> distributors = new HashSet<>();
+        if( !tvShow.getActors().isEmpty())
         for (Actor actor : tvShow.getActors()){
             actors.add(actor.getId());
         }
+        if( !tvShow.getDistributors().isEmpty())
         for (Distributor distributor : tvShow.getDistributors()){
             distributors.add(distributor.getId());
         }

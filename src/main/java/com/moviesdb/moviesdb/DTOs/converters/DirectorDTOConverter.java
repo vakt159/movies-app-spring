@@ -20,9 +20,11 @@ public class DirectorDTOConverter {
         }else birthday = null;
         Set<Long> movies = new HashSet<>();
         Set<Long> tvShows = new HashSet<>();
+        if(!director.getMovies().isEmpty())
         for (Movie movie : director.getMovies()){
             movies.add(movie.getId());
         }
+        if(!director.getTvShows().isEmpty())
         for (TVShow tvShow : director.getTvShows()){
             tvShows.add(tvShow.getId());
         }

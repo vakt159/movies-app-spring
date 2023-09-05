@@ -38,4 +38,35 @@ public class TVShow extends WatchableBaseEntity {
             inverseJoinColumns = @JoinColumn(name = "distributor_id"))
     private Set<Distributor> distributors;
 
+    public void addActor(Actor actor)
+    {
+        this.actors.add(actor);
+        actor.getTvShows().add(this);
+    }
+    public void addDistributor(Distributor distributor)
+    {
+        this.distributors.add(distributor);
+        distributor.getTvShows().add(this);
+    }
+    public void removeActor(Actor actor)
+    {
+        this.actors.remove(actor);
+        actor.getTvShows().remove(this);
+    }
+    public void removeDistributor(Distributor distributor)
+    {
+        this.distributors.remove(distributor);
+        distributor.getTvShows().remove(this);
+    }
+
+    public void removeDirector()
+    {
+        setDirector(null);
+        director.getTvShows().remove(this);
+    }
+    public void addDirector(Director director)
+    {
+        setDirector(director);
+        director.getTvShows().add(this);
+    }
 }

@@ -44,7 +44,7 @@ public class TVShowController {
         return tvShowDTOS;
     }
 
-    @GetMapping("/tvShows/{id}")
+    @GetMapping("/tvShows/id/{id}")
     public @ResponseBody TVShowDTO findById(@PathVariable Long id) {
         TVShow tvShow = (TVShow) tvShowService.findById(id);
         if (tvShow == null) {
@@ -58,10 +58,40 @@ public class TVShowController {
         return TVShowDTOConverter.totvShowDTO((TVShow) tvShowService.save(tvShow));
 
     }
-    @PutMapping("/tvShow/{id}/update")
-    public @ResponseBody TVShow update(@Valid @RequestBody TVShow tvShow, @PathVariable Long id)
+    @GetMapping("/tvShows/name/{name}")
+    public @ResponseBody List<TVShowDTO> findByName(@PathVariable String name)
     {
-        return (TVShow) tvShowService.update(tvShow,id);
+        List<WatchableBaseEntity> tvShows = tvShowService.findByName(name);
+        List<TVShowDTO> tvShowDTOS = new ArrayList<>();
+        for (WatchableBaseEntity tvShow : tvShows){
+            tvShowDTOS.add(TVShowDTOConverter.totvShowDTO((TVShow) tvShow));
+        }
+        return tvShowDTOS;
+    }
+    @PutMapping("/tvShows/{id}/update")
+    public @ResponseBody TVShowDTO update(@Valid @RequestBody TVShow tvShow, @PathVariable Long id)
+    {
+        return TVShowDTOConverter.totvShowDTO((TVShow) tvShowService.update(tvShow,id));
+    }
+    @PutMapping("/tvShows/{tvShowId}/distributor/{distId}/delete")
+    public @ResponseBody void deleteDistributor(@PathVariable Long tvShowId, @PathVariable Long distId)
+    {
+        tvShowService.deleteDistributor(tvShowId,distId);
+    }
+    @PutMapping("/tvShows/{tvShowId}/actor/{actorId}/delete")
+    public @ResponseBody void deleteActor(@PathVariable Long tvShowId, @PathVariable Long actorId)
+    {
+        tvShowService.deleteActor(tvShowId,actorId);
+    }
+    @PutMapping("/tvShows/{tvShowId}/actor/{actorId}/add")
+    public @ResponseBody void addActor(@PathVariable Long tvShowId, @PathVariable Long actorId)
+    {
+        tvShowService.addActor(tvShowId,actorId);
+    }
+    @PutMapping("/tvShows/{tvShowId}/distributor/{distId}/add")
+    public @ResponseBody void addDistributor(@PathVariable Long tvShowId, @PathVariable Long distId)
+    {
+        tvShowService.addDistributor(tvShowId,distId);
     }
 
     @DeleteMapping("/tvShows/{id}/delete")

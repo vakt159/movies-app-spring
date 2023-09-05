@@ -22,4 +22,24 @@ public class Distributor extends NonHumanBaseEntity {
     @ManyToMany(mappedBy = "distributors")
     private Set<TVShow> tvShows;
 
+    public void addMovie(Movie movie)
+    {
+        this.movies.add(movie);
+        movie.getDistributors().add(this);
+    }
+    public void addTvShow(TVShow tvShow)
+    {
+        this.tvShows.add(tvShow);
+        tvShow.getDistributors().add(this);
+    }
+    public void removeMovie(Movie movie)
+    {
+        this.movies.remove(movie);
+        movie.getDistributors().remove(this);
+    }
+    public void removeTvShow(TVShow tvShow)
+    {
+        this.tvShows.remove(tvShow);
+        tvShow.getDistributors().remove(this);
+    }
 }
