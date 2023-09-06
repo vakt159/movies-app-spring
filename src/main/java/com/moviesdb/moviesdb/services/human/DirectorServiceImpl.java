@@ -56,7 +56,19 @@ public class DirectorServiceImpl implements HumanService {
 
     @Override
     public void deleteById(Long id) {
+        Director director;
         if(directorDAO.findById(id).isPresent()){
+            director = directorDAO.findById(id).get();
+
+            director.getMovies().forEach(movie -> {
+                movie.setDirector(null);
+                movieDAO.save(movie);
+            });
+
+            director.getTvShows().forEach(tvShow -> {
+                tvShow.setDirector(null);
+                tvShowDAO.save(tvShow);
+            });
             directorDAO.deleteById(id);
         }else{
             throw new NoSuchElementException("Director with id = " + id + " is not found");
@@ -69,12 +81,13 @@ public class DirectorServiceImpl implements HumanService {
     }
 
 
-    public HumanBaseEntity findDirectorByFirstNameAndLastName(String firstName, String lastName)
+    public HumanBaseEntity findByFirstNameAndLastName(String firstName, String lastName)
     {
-        Director foundDirector = directorDAO.findDirectorByFirstNameAndLastName(firstName, lastName);
-        if(foundDirector==null)
-            throw new RuntimeException("Director doesn't exist");
-        return foundDirector;
+        Optional<Director> foundDirector = directorDAO.findDirectorByFirstNameAndLastName(firstName, lastName);
+        if(foundDirector.isEmpty())
+            throw new NoSuchElementException("Director with first name = " + firstName +
+                    "and last name = " + lastName + " does not exist");
+        return foundDirector.get();
     }
 
     @Override
