@@ -1,6 +1,7 @@
 package com.moviesdb.moviesdb.services.human;
 
 import com.moviesdb.moviesdb.models.Director;
+import com.moviesdb.moviesdb.models.Distributor;
 import com.moviesdb.moviesdb.models.Movie;
 import com.moviesdb.moviesdb.models.TVShow;
 import com.moviesdb.moviesdb.models.superclasses.HumanBaseEntity;
@@ -54,9 +55,20 @@ public class DirectorServiceImpl implements HumanService {
         return directorDAO.save((Director) director);
     }
 
-    @Override
     public void deleteById(Long id) {
+        Director director;
         if(directorDAO.findById(id).isPresent()){
+            director = directorDAO.findById(id).get();
+
+            director.getMovies().forEach(movie -> {
+                movie.setDirector(null);
+                movieDAO.save(movie);
+            });
+
+            director.getTvShows().forEach(tvShow -> {
+                tvShow.setDirector(null);
+                tvShowDAO.save(tvShow);
+            });
             directorDAO.deleteById(id);
         }else{
             throw new NoSuchElementException("Director with id = " + id + " is not found");
