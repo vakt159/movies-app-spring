@@ -1,6 +1,7 @@
 package com.moviesdb.moviesdb.services.human;
 
 import com.moviesdb.moviesdb.models.Director;
+import com.moviesdb.moviesdb.models.Distributor;
 import com.moviesdb.moviesdb.models.Movie;
 import com.moviesdb.moviesdb.models.TVShow;
 import com.moviesdb.moviesdb.models.superclasses.HumanBaseEntity;

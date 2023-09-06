@@ -1,5 +1,6 @@
 package com.moviesdb.moviesdb.controller.handlers;
 
+import com.moviesdb.moviesdb.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -33,6 +34,15 @@ public class GlobalHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<String> handlerNoSuchElementExceptions(NoSuchElementException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler({HumanNotFoundException.class, NonHumanNotFoundException.class,
+                      AlreadyHasValueException.class, HasNotValueException.class,
+                      WatchableNotFoundException.class})
+    public Map<String, String> handleException(Exception exception) {
+        Map<String, String> map =  new HashMap<>();
+        map.put("errorMessage", exception.getMessage());
+        return map;
     }
 
 }

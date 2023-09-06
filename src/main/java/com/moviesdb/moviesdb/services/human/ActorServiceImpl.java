@@ -1,5 +1,6 @@
 package com.moviesdb.moviesdb.services.human;
 
+import com.moviesdb.moviesdb.exceptions.WatchableNotFoundException;
 import com.moviesdb.moviesdb.models.Movie;
 import com.moviesdb.moviesdb.models.TVShow;
 import com.moviesdb.moviesdb.models.superclasses.HumanBaseEntity;
@@ -87,7 +88,7 @@ public class ActorServiceImpl implements HumanService {
     }
 
     @Override
-    public void deleteTVShow(Long actor_id, Long tvShow_id) {
+    public void deleteTVShow(Long actor_id, Long tvShow_id) throws WatchableNotFoundException {
         Actor origin_actor = findById(actor_id);
         TVShow tvShow = tvShowService.findById(tvShow_id);
         if (origin_actor == null) {
@@ -104,7 +105,7 @@ public class ActorServiceImpl implements HumanService {
     }
 
     @Override
-    public void deleteMovie(Long actor_id, Long movie_id) {
+    public void deleteMovie(Long actor_id, Long movie_id) throws WatchableNotFoundException {
         Actor origin_actor = findById(actor_id);
         Movie movie = movieService.findById(movie_id);
         if (origin_actor == null) {
@@ -121,7 +122,7 @@ public class ActorServiceImpl implements HumanService {
     }
 
     @Override
-    public void addTVShow(Long actor_id, Long tvShow_id) {
+    public void addTVShow(Long actor_id, Long tvShow_id) throws WatchableNotFoundException {
         Actor origin_actor = findById(actor_id);
         TVShow tvShow = tvShowService.findById(tvShow_id);
         if (origin_actor == null) {
@@ -136,7 +137,7 @@ public class ActorServiceImpl implements HumanService {
     }
 
     @Override
-    public void addMovie(Long actor_id, Long movie_id) {
+    public void addMovie(Long actor_id, Long movie_id) throws WatchableNotFoundException {
         Actor origin_actor = findById(actor_id);
         Movie movie = movieService.findById(movie_id);
         if (origin_actor == null) {
