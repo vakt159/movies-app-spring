@@ -31,9 +31,9 @@ public class DirectorServiceImpl implements HumanService {
         if(id==null || id<=0) {
             throw new RuntimeException("Id doesn't exist");
         }
-            Optional<Director> directorOptional=directorDAO.findById(id);
+        Optional<Director> directorOptional=directorDAO.findById(id);
         if(directorOptional.isPresent())
-        return directorOptional.get();
+            return directorOptional.get();
         else
             throw new RuntimeException("Director with this id doesn't exist");
     }
@@ -54,9 +54,20 @@ public class DirectorServiceImpl implements HumanService {
         return directorDAO.save((Director) director);
     }
 
-    @Override
     public void deleteById(Long id) {
+        Director director;
         if(directorDAO.findById(id).isPresent()){
+            director = directorDAO.findById(id).get();
+
+            director.getMovies().forEach(movie -> {
+                movie.setDirector(null);
+                movieDAO.save(movie);
+            });
+
+            director.getTvShows().forEach(tvShow -> {
+                tvShow.setDirector(null);
+                tvShowDAO.save(tvShow);
+            });
             directorDAO.deleteById(id);
         }else{
             throw new NoSuchElementException("Director with id = " + id + " is not found");

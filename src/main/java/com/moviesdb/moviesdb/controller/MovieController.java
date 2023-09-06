@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-@Controller
+@RestController
 public class MovieController {
     private final WatchableService movieService;
 
@@ -90,21 +90,5 @@ public class MovieController {
             movieDTOS.add(MovieDTOConverter.tomovieDTO((Movie)movie));
         }
         return movieDTOS;
-    }
-    @ExceptionHandler
-    public ResponseEntity<String> MovieException(NoSuchElementException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
-    }
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleValidationExceptions(
-            MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        return errors;
     }
 }

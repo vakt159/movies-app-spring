@@ -17,7 +17,7 @@ import java.util.*;
 
 import org.springframework.http.HttpStatus;
 
-@Controller
+@RestController
 public class ActorController {
     private final HumanService actorService;
 
@@ -90,21 +90,7 @@ public class ActorController {
         actorService.addMovie(actorId,movieId);
     }
 
-    @ExceptionHandler
-    public ResponseEntity<String> ActorException(NoSuchElementException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
-    }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleValidationExceptions(
-            MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        return errors;
-    }
+
+
 }
