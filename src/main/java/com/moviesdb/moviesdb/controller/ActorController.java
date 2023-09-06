@@ -17,7 +17,7 @@ import java.util.*;
 
 import org.springframework.http.HttpStatus;
 
-@Controller
+@RestController
 public class ActorController {
     private final HumanService actorService;
 
@@ -51,15 +51,11 @@ public class ActorController {
 
     }
 
-//    @GetMapping("/find")
-//    public @ResponseBody Actor findByFirstLastName(@RequestBody String firstName, String lastName) {
-//        Actor actor = actorService.findActorByFirstNameAndLastName(firstName, lastName);
-//        if (actor == null) {
-//            throw new NoSuchElementException("Actor with first name = " + firstName + "and last name = " + lastName + " does not exist");
-//        } else {
-//            return actorService.findActorByFirstNameAndLastName(firstName, lastName);
-//        }
-//    }
+    @GetMapping("/actors/find")
+    public @ResponseBody ActorDTO findByFirstLastName(@RequestBody Map<String,String> fullname) {
+        return ActorDTOConverter.toactorDTO((Actor)actorService
+                .findByFirstNameAndLastName(fullname.get("firstname"), fullname.get("lastname")));
+    }
 
     @DeleteMapping("/actors/{id}/delete")
     public @ResponseBody void deleteById(@PathVariable Long id) {
@@ -90,21 +86,7 @@ public class ActorController {
         actorService.addMovie(actorId,movieId);
     }
 
-    @ExceptionHandler
-    public ResponseEntity<String> ActorException(NoSuchElementException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
-    }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleValidationExceptions(
-            MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        return errors;
-    }
+
+
 }

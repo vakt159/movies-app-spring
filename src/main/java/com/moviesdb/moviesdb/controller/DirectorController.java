@@ -2,6 +2,7 @@ package com.moviesdb.moviesdb.controller;
 
 import com.moviesdb.moviesdb.DTOs.converters.DirectorDTOConverter;
 import com.moviesdb.moviesdb.DTOs.dto.DirectorDTO;
+import com.moviesdb.moviesdb.models.Actor;
 import com.moviesdb.moviesdb.models.Director;
 import com.moviesdb.moviesdb.models.superclasses.HumanBaseEntity;
 import com.moviesdb.moviesdb.services.human.HumanService;
@@ -21,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-@Controller
+@RestController
 public class DirectorController {
 
     private final HumanService directorService;
@@ -39,6 +40,11 @@ public class DirectorController {
             directorDTOS.add(DirectorDTOConverter.todirectorDTO((Director)director));
         }
         return directorDTOS;
+    }
+    @GetMapping("/directors/find")
+    public @ResponseBody DirectorDTO findByFirstLastName(@RequestBody Map<String,String> fullname) {
+        return DirectorDTOConverter.todirectorDTO((Director) directorService.
+                findByFirstNameAndLastName(fullname.get("firstname"),fullname.get("lastname")));
     }
 
     @GetMapping("/directors/id/{id}")
@@ -82,21 +88,4 @@ public class DirectorController {
         directorService.deleteTVShow(id, TVShowId);
     }
 
-    @ExceptionHandler
-    public ResponseEntity<String> onMissingDirector(NoSuchElementException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage() + ": no director was found");
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleValidationExceptions(
-            MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        return errors;
-    }
 }

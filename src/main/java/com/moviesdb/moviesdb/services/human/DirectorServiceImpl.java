@@ -32,9 +32,9 @@ public class DirectorServiceImpl implements HumanService {
         if(id==null || id<=0) {
             throw new RuntimeException("Id doesn't exist");
         }
-            Optional<Director> directorOptional=directorDAO.findById(id);
+        Optional<Director> directorOptional=directorDAO.findById(id);
         if(directorOptional.isPresent())
-        return directorOptional.get();
+            return directorOptional.get();
         else
             throw new RuntimeException("Director with this id doesn't exist");
     }
@@ -81,12 +81,13 @@ public class DirectorServiceImpl implements HumanService {
     }
 
 
-    public HumanBaseEntity findDirectorByFirstNameAndLastName(String firstName, String lastName)
+    public HumanBaseEntity findByFirstNameAndLastName(String firstName, String lastName)
     {
-        Director foundDirector = directorDAO.findDirectorByFirstNameAndLastName(firstName, lastName);
-        if(foundDirector==null)
-            throw new RuntimeException("Director doesn't exist");
-        return foundDirector;
+        Optional<Director> foundDirector = directorDAO.findDirectorByFirstNameAndLastName(firstName, lastName);
+        if(foundDirector.isEmpty())
+            throw new NoSuchElementException("Director with first name = " + firstName +
+                    "and last name = " + lastName + " does not exist");
+        return foundDirector.get();
     }
 
     @Override

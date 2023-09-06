@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
-@Controller
+@RestController
 public class DistributorController {
 
     private final NonHumanService nonHumanService;
@@ -89,24 +89,4 @@ public class DistributorController {
     public @ResponseBody void deleteTVShow(@PathVariable Long id, @PathVariable Long TVShowId) {
         nonHumanService.deleteTVShow(id, TVShowId);
     }
-
-    @ExceptionHandler
-    public ResponseEntity<String> onMissingDistributor(NoSuchElementException ex) {
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage() + ": no one distributor was found");
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleValidationExceptions(
-            MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        return errors;
-    }
-
 }
