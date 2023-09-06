@@ -1,5 +1,6 @@
 package com.moviesdb.moviesdb.services.watchable;
 
+import com.moviesdb.moviesdb.exceptions.*;
 import com.moviesdb.moviesdb.models.*;
 import com.moviesdb.moviesdb.models.superclasses.WatchableBaseEntity;
 import com.moviesdb.moviesdb.persistence.ActorDAO;
@@ -26,12 +27,15 @@ public class MovieServiceImpl implements WatchableService {
     }
 
     @Override
-    public Movie findById(Long id) {
+    public Movie findById(Long id) throws WatchableNotFoundException {
         if (id == null || id <= 0) {
-            throw new RuntimeException("Id doesn't exist");
+            throw new IllegalArgumentException("Id doesn't exist");
         }
         Optional<Movie> movieOptional = movieDAO.findById(id);
-        return movieOptional.orElse(null);
+        if (movieOptional.isPresent())
+            return movieOptional.get();
+        else
+            throw new WatchableNotFoundException("Movie with id =" + id + "doesn't exist");
     }
 
     @Override
@@ -45,30 +49,24 @@ public class MovieServiceImpl implements WatchableService {
     }
 
     @Override
-    public WatchableBaseEntity save(WatchableBaseEntity movie) {
+    public WatchableBaseEntity save(WatchableBaseEntity movie) throws WatchableNotFoundException {
         if (movie == null)
-            throw new RuntimeException("Movie doesn't exist");
+            throw new WatchableNotFoundException("Movie can't be null");
         return movieDAO.save((Movie) movie);
     }
 
     @Override
-    public WatchableBaseEntity update(WatchableBaseEntity watchable, Long id) {
+    public WatchableBaseEntity update(WatchableBaseEntity watchable, Long id) throws WatchableNotFoundException {
         Movie movie = (Movie) watchable;
-        if (movie == null || id == null)
-            throw new RuntimeException("Movie or id can't be null");
-        if (movie.getDirector() == null)
-            throw new RuntimeException("Director can't be null");
-        if (movie.getName() == null || movie.getName().equals(""))
-            throw new RuntimeException("Name can't be null");
-        if (movie.getAgeRestriction() <= 0)
-            throw new RuntimeException("Age restriction can't be less than 1");
-        if (movie.getDescription() == null || movie.getDescription().equals(""))
-            throw new RuntimeException("Description can't be null");
+        if (movie == null) {
+            throw new WatchableNotFoundException("Passed movie can't be null");
+        } else if (id == null) {
+            throw new IllegalArgumentException("Passed id of movie is null");
+        }
 
         Movie movieToUpdate = movieDAO.findById(id).orElse(null);
-
         if (movieToUpdate == null)
-            throw new RuntimeException("Movie ot update can't be found");
+            throw new WatchableNotFoundException("Movie to update can't be found");
         movieToUpdate.setName(movie.getName());
         movieToUpdate.setAgeRestriction(movie.getAgeRestriction());
         movieToUpdate.setDescription(movie.getDescription());
@@ -78,18 +76,23 @@ public class MovieServiceImpl implements WatchableService {
     }
 
     @Override
-    public void deleteDistributor(Long movieId, Long distributorID) {
-        if (distributorID == null || distributorID <= 0 || movieId == null || movieId <= 0)
-            throw new RuntimeException("Id is not correct");
-        else {
+    public void deleteDistributor(Long movieId, Long distributorID) throws NonHumanNotFoundException, WatchableNotFoundException, HasNotValueException {
+        if (distributorID == null || distributorID <= 0)
+            throw new NonHumanNotFoundException("Passed distributor's id is not correct");
+        else if (movieId == null || movieId <= 0) {
+            throw new WatchableNotFoundException("Passed movie's id is not correct");
+        } else {
             Distributor distributor = distributorDAO.findById(distributorID).orElse(null);
             Movie movie = movieDAO.findById(movieId).orElse(null);
             if (distributor == null)
-                throw new RuntimeException("Distributor not found");
-            if ( movie == null)
-                throw new RuntimeException("Movie not found");
-            if(!movie.containsDistributor(distributor))
-                throw new RuntimeException("This movie doesn't have this distributor");
+                throw new NonHumanNotFoundException("Distributor not found");
+            if (movie == null)
+                throw new WatchableNotFoundException("Movie not found");
+
+            if (!movie.containsDistributor(distributor))
+                throw new HasNotValueException("This movie doesn't have this distributor");
+
+
             movie.removeDistributor(distributor);
             movieDAO.save(movie);
             distributorDAO.save(distributor);
@@ -99,24 +102,26 @@ public class MovieServiceImpl implements WatchableService {
     @Override
     public List<WatchableBaseEntity> findByName(String name) {
         if (name == null || name.equals(""))
-            throw new RuntimeException("Name can't null");
+            throw new IllegalArgumentException("Name can't null");
         List<Movie> movies = movieDAO.findByName(name);
         return new ArrayList<>(movies);
     }
 
     @Override
-    public void deleteActor(Long movieId, Long actorId) {
-        if (actorId == null || actorId <= 0 || movieId == null || movieId <= 0)
-            throw new RuntimeException("Id is not correct");
-        else {
+    public void deleteActor(Long movieId, Long actorId) throws HumanNotFoundException, WatchableNotFoundException, HasNotValueException {
+        if (movieId == null || movieId <= 0) {
+            throw new IllegalArgumentException("MovieId is not correct");
+        } else if (actorId == null || actorId <= 0) {
+            throw new IllegalArgumentException("ActorId is not correct");
+        } else {
             Actor actor = actorDAO.findById(actorId).orElse(null);
             Movie movie = movieDAO.findById(movieId).orElse(null);
             if (actor == null)
-                throw new RuntimeException("Actor not found");
-            if ( movie == null)
-                throw new RuntimeException("Movie not found");
-            if(!movie.containsActor(actor))
-                throw new RuntimeException("This movie doesn't have this actor");
+                throw new HumanNotFoundException("Actor with id= "+actorId+"not found");
+            if (movie == null)
+                throw new WatchableNotFoundException("Watchable with id= "+movieId+"not found");
+            if (!movie.containsActor(actor))
+                throw new HasNotValueException("This movie doesn't have this actor");
             movie.removeActor(actor);
             movieDAO.save(movie);
             actorDAO.save(actor);
@@ -124,26 +129,26 @@ public class MovieServiceImpl implements WatchableService {
     }
 
     @Override
-    public void addDirector(Long watchId, Director director) {
+    public void addDirector(Long watchId, Director director) throws AlreadyHasValueException, WatchableNotFoundException, HumanNotFoundException {
         Movie movie = movieDAO.findById(watchId).orElse(null);
         if (director == null)
-            throw new RuntimeException("Director is null");
+            throw new HumanNotFoundException("Director is null");
         if (movie == null)
-            throw new RuntimeException("Movie can`t be null or it doesn't have director");
-        if(movie.getDirector()!=null)
-            throw new RuntimeException("Movie already has director");
+            throw new WatchableNotFoundException("Movie can`t be null or it doesn't have director");
+        if (movie.getDirector() != null)
+            throw new AlreadyHasValueException("Movie already has director");
         movie.addDirector(director);
         movieDAO.save(movie);
         directorDAO.save(director);
     }
 
     @Override
-    public void removeDirector(Long watchId) {
+    public void removeDirector(Long watchId) throws HasNotValueException, WatchableNotFoundException {
         Movie movie = movieDAO.findById(watchId).orElse(null);
-        if (movie == null )
-            throw new RuntimeException("Movie can`t be null");
-        if (movie.getDirector()==null)
-            throw new RuntimeException("Movie doesn't have director");
+        if (movie == null)
+            throw new WatchableNotFoundException("Movie can`t be null");
+        if (movie.getDirector() == null)
+            throw new HasNotValueException("Movie doesn't have director");
         Director director = movie.getDirector();
         movie.removeDirector();
         directorDAO.save(director);
@@ -152,15 +157,14 @@ public class MovieServiceImpl implements WatchableService {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(Long id) throws WatchableNotFoundException {
         Movie deleteMovie = findById(id);
         if (deleteMovie == null) {
-            throw new NoSuchElementException("Movie with id = " + id + " does not exist");
+            throw new WatchableNotFoundException("Movie with id = " + id + " does not exist");
         } else {
             for (Actor actor : deleteMovie.getActors()) {
                 actor.getMovies().remove(deleteMovie);
             }
-
             for (Distributor distributor : deleteMovie.getDistributors()) {
                 distributor.getMovies().remove(deleteMovie);
             }
@@ -174,13 +178,13 @@ public class MovieServiceImpl implements WatchableService {
     }
 
     @Override
-    public void addActor(Long watchId, Long actorId) {
+    public void addActor(Long watchId, Long actorId) throws WatchableNotFoundException, HumanNotFoundException {
         Movie origin_movie = findById(watchId);
         Actor actor = actorDAO.findById(actorId).orElse(null);
         if (origin_movie == null) {
-            throw new NoSuchElementException("Movie with id = " + watchId + " does not exist");
+            throw new WatchableNotFoundException("Movie with id = " + watchId + " does not exist");
         } else if (actor == null) {
-            throw new NoSuchElementException("Actor with id = " + actorId + " does not exist");
+            throw new HumanNotFoundException("Actor with id = " + actorId + " does not exist");
         } else {
             origin_movie.addActor(actor);
             movieDAO.save(origin_movie);
@@ -189,13 +193,13 @@ public class MovieServiceImpl implements WatchableService {
     }
 
     @Override
-    public void addDistributor(Long watchId, Long distributorId) {
+    public void addDistributor(Long watchId, Long distributorId) throws WatchableNotFoundException, HumanNotFoundException {
         Movie origin_movie = findById(watchId);
         Distributor distributor = distributorDAO.findById(distributorId).orElse(null);
         if (origin_movie == null) {
-            throw new NoSuchElementException("Movie with id = " + watchId + " does not exist");
+            throw new WatchableNotFoundException("Movie with id = " + watchId + " does not exist");
         } else if (distributor == null) {
-            throw new NoSuchElementException("Distributor with id = " + distributorId + " does not exist");
+            throw new HumanNotFoundException("Distributor with id = " + distributorId + " does not exist");
         } else {
             origin_movie.addDistributor(distributor);
             movieDAO.save(origin_movie);

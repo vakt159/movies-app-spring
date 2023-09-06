@@ -1,6 +1,7 @@
 package com.moviesdb.moviesdb.models.superclasses;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -13,6 +14,8 @@ import lombok.*;
 public class NonHumanBaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull
+    @Min(value = 1)
     private Long id;
 
     @NotNull

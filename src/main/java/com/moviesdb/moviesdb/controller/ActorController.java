@@ -2,6 +2,7 @@ package com.moviesdb.moviesdb.controller;
 
 import com.moviesdb.moviesdb.DTOs.converters.ActorDTOConverter;
 import com.moviesdb.moviesdb.DTOs.dto.ActorDTO;
+import com.moviesdb.moviesdb.exceptions.WatchableNotFoundException;
 import com.moviesdb.moviesdb.models.Actor;
 import com.moviesdb.moviesdb.models.superclasses.HumanBaseEntity;
 import com.moviesdb.moviesdb.services.human.HumanService;
@@ -68,21 +69,21 @@ public class ActorController {
     }
 
     @DeleteMapping("/actors/{actorId}/tvShow/{tvShowId}/delete")
-    public @ResponseBody void deleteTVShow(@PathVariable Long actorId, @PathVariable Long tvShowId){
+    public @ResponseBody void deleteTVShow(@PathVariable Long actorId, @PathVariable Long tvShowId) throws WatchableNotFoundException {
         actorService.deleteTVShow(actorId,tvShowId);
     }
 
     @PutMapping("/actors/{actorId}/tvShow/{tvShowId}/save")
-    public @ResponseBody void addTVShow(@PathVariable Long actorId, @PathVariable Long tvShowId){
+    public @ResponseBody void addTVShow(@PathVariable Long actorId, @PathVariable Long tvShowId) throws WatchableNotFoundException {
          actorService.addTVShow(actorId,tvShowId);
     }
     @DeleteMapping("/actors/{actorId}/movie/{movieId}/delete")
-    public @ResponseBody void deleteMovie(@PathVariable Long actorId, @PathVariable Long movieId){
+    public @ResponseBody void deleteMovie(@PathVariable Long actorId, @PathVariable Long movieId) throws WatchableNotFoundException {
         actorService.deleteTVShow(actorId,movieId);
     }
 
     @PutMapping("/actors/{actorId}/movie/{movieId}/save")
-    public @ResponseBody void addMovie(@PathVariable Long actorId, @PathVariable Long movieId){
+    public @ResponseBody void addMovie(@PathVariable Long actorId, @PathVariable Long movieId) throws WatchableNotFoundException {
         actorService.addMovie(actorId,movieId);
     }
 

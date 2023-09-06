@@ -13,6 +13,8 @@ import lombok.*;
 public class WatchableBaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull
+    @Min(value = 1)
     private Long id;
 
     @NotNull
