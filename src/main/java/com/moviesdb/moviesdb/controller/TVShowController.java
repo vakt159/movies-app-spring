@@ -1,29 +1,17 @@
 package com.moviesdb.moviesdb.controller;
 
-import com.moviesdb.moviesdb.DTOs.converters.MovieDTOConverter;
 import com.moviesdb.moviesdb.DTOs.converters.TVShowDTOConverter;
-import com.moviesdb.moviesdb.DTOs.dto.MovieDTO;
 import com.moviesdb.moviesdb.DTOs.dto.TVShowDTO;
 import com.moviesdb.moviesdb.exceptions.*;
-import com.moviesdb.moviesdb.models.Movie;
-import com.moviesdb.moviesdb.models.Director;
-
 import com.moviesdb.moviesdb.models.TVShow;
 import com.moviesdb.moviesdb.models.superclasses.WatchableBaseEntity;
 import com.moviesdb.moviesdb.services.watchable.WatchableService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -88,7 +76,7 @@ public class TVShowController {
         tvShowService.addActor(tvShowId,actorId);
     }
     @PutMapping("/tvShows/{tvShowId}/distributor/{distId}/add")
-    public @ResponseBody void addDistributor(@PathVariable Long tvShowId, @PathVariable Long distId) throws WatchableNotFoundException, HumanNotFoundException {
+    public @ResponseBody void addDistributor(@PathVariable Long tvShowId, @PathVariable Long distId) throws WatchableNotFoundException, HumanNotFoundException, NonHumanNotFoundException {
         tvShowService.addDistributor(tvShowId,distId);
     }
 

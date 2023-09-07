@@ -8,17 +8,10 @@ import com.moviesdb.moviesdb.models.superclasses.WatchableBaseEntity;
 import com.moviesdb.moviesdb.services.watchable.WatchableService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -75,7 +68,7 @@ public class MovieController {
         movieService.addActor(movieId,actorId);
     }
     @PutMapping("/movies/{movieId}/distributor/{distId}/add")
-    public @ResponseBody void addDistributor(@PathVariable Long movieId, @PathVariable Long distId) throws WatchableNotFoundException, HumanNotFoundException {
+    public @ResponseBody void addDistributor(@PathVariable Long movieId, @PathVariable Long distId) throws WatchableNotFoundException, HumanNotFoundException, NonHumanNotFoundException {
         movieService.addDistributor(movieId,distId);
     }
     @GetMapping("/movies/name/{name}")
