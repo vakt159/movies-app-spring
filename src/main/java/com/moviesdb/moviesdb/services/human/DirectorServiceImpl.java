@@ -1,9 +1,10 @@
 package com.moviesdb.moviesdb.services.human;
 
-import com.moviesdb.moviesdb.models.Director;
-import com.moviesdb.moviesdb.models.Distributor;
-import com.moviesdb.moviesdb.models.Movie;
-import com.moviesdb.moviesdb.models.TVShow;
+import com.moviesdb.moviesdb.exceptions.AlreadyHasValueException;
+import com.moviesdb.moviesdb.exceptions.HasNotValueException;
+import com.moviesdb.moviesdb.exceptions.HumanNotFoundException;
+import com.moviesdb.moviesdb.exceptions.WatchableNotFoundException;
+import com.moviesdb.moviesdb.models.*;
 import com.moviesdb.moviesdb.models.superclasses.HumanBaseEntity;
 import com.moviesdb.moviesdb.persistence.DirectorDAO;
 import com.moviesdb.moviesdb.persistence.MovieDAO;
@@ -28,15 +29,15 @@ public class DirectorServiceImpl implements HumanService {
         this.movieDAO = movieDAO;
     }
     @Override
-    public Director findById(Long id) {
+    public Director findById(Long id) throws HumanNotFoundException {
         if(id==null || id<=0) {
-            throw new RuntimeException("Id doesn't exist");
+            throw new IllegalArgumentException("Id doesn't exist");
         }
         Optional<Director> directorOptional=directorDAO.findById(id);
         if(directorOptional.isPresent())
             return directorOptional.get();
         else
-            throw new RuntimeException("Director with this id doesn't exist");
+            throw new HumanNotFoundException("Director with id ="+id+"doesn't exist");
     }
     @Override
     public List<HumanBaseEntity> findAll() {
@@ -49,13 +50,15 @@ public class DirectorServiceImpl implements HumanService {
     }
 
     @Override
-    public HumanBaseEntity save(HumanBaseEntity director) {
+    public HumanBaseEntity save(HumanBaseEntity director) throws HumanNotFoundException {
         if(director==null)
-            throw new RuntimeException("Director doesn't exist");
+            throw new IllegalArgumentException("Director doesn't exist");
         return directorDAO.save((Director) director);
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(Long id) throws HumanNotFoundException {
+        if(id==null||id<=0)
+            throw new IllegalArgumentException("Id can't be null or <0");
         Director director;
         if(directorDAO.findById(id).isPresent()){
             director = directorDAO.findById(id).get();
@@ -71,62 +74,101 @@ public class DirectorServiceImpl implements HumanService {
             });
             directorDAO.deleteById(id);
         }else{
-            throw new NoSuchElementException("Director with id = " + id + " is not found");
+            throw new HumanNotFoundException("Director with id = " + id + " is not found");
         }
     }
 
     @Override
-    public HumanBaseEntity update(HumanBaseEntity human, Long id) {
-        return null;
+    public HumanBaseEntity update(HumanBaseEntity human, Long id) throws HumanNotFoundException {
+        Director director = findById(id);
+        if (director == null) {
+            throw new HumanNotFoundException("Director with id="+id+" not found");
+        } else {
+            director.setBiography(human.getBiography());
+            director.setBirthday(human.getBirthday());
+            director.setFirstName(human.getFirstName());
+            director.setLastName(human.getLastName());
+            directorDAO.save(director);
+            return director;
+        }
     }
 
 
-    public HumanBaseEntity findByFirstNameAndLastName(String firstName, String lastName)
-    {
+    public HumanBaseEntity findByFirstNameAndLastName(String firstName, String lastName) throws HumanNotFoundException {
         Optional<Director> foundDirector = directorDAO.findDirectorByFirstNameAndLastName(firstName, lastName);
         if(foundDirector.isEmpty())
-            throw new NoSuchElementException("Director with first name = " + firstName +
+            throw new HumanNotFoundException("Director with first name = " + firstName +
                     "and last name = " + lastName + " does not exist");
         return foundDirector.get();
     }
 
     @Override
-    public void deleteTVShow(Long directorId, Long tvShowId) {
-        Director findedDirector = this.findById(directorId);
-        Optional<TVShow> optionalTVShow = tvShowDAO.findById(tvShowId);
+    public void deleteTVShow(Long directorId, Long tvShowId) throws HumanNotFoundException, WatchableNotFoundException, HasNotValueException {
+        if(directorId<=0||directorId==null)
+            throw new IllegalArgumentException("Director's id can't be null or <0");
+        if(tvShowId<=0||tvShowId==null)
+            throw new IllegalArgumentException("TvShow's id can't be null or <0");
 
+        Director findedDirector = findById(directorId);
+        if(findedDirector==null)
+            throw new HumanNotFoundException("Director with id="+directorId+" not found");
+
+        Optional<TVShow> optionalTVShow = tvShowDAO.findById(tvShowId);
         if(optionalTVShow.isPresent()){
             TVShow tvShow = optionalTVShow.get();
+            if(!findedDirector.containsTVShow(tvShow))
+                throw new HasNotValueException("This tvShow is not directed by this director");
             findedDirector.removeTvShow(tvShow);
             tvShowDAO.save(tvShow);
             directorDAO.save(findedDirector);
         }else{
-            throw new NoSuchElementException("TVShow with id = " + tvShowId + " was not found");
+            throw new WatchableNotFoundException("TVShow with id = " + tvShowId + " was not found");
         }
 
     }
 
     @Override
-    public void deleteMovie(Long directorId, Long movieId) {
-        Director findedDirector = this.findById(directorId);
+    public void deleteMovie(Long directorId, Long movieId) throws HumanNotFoundException, WatchableNotFoundException, HasNotValueException {
+        if(directorId<=0||directorId==null)
+            throw new IllegalArgumentException("Director's id can't be null or <0");
+        if(movieId<=0||movieId==null)
+            throw new IllegalArgumentException("Movie's id can't be null or <0");
+
+        Director findedDirector = findById(directorId);
+        if(findedDirector==null)
+            throw new HumanNotFoundException("Director with id="+directorId+" not found");
         Optional<Movie> optionalMovie = movieDAO.findById(movieId);
         if(optionalMovie.isPresent()) {
-            Movie movie = optionalMovie.get();
+              Movie movie = optionalMovie.get();
+            if(!findedDirector.containsMovie(movie))
+                throw new HasNotValueException("This movie is not directed by this director");
             findedDirector.removeMovie(movie);
             movieDAO.save(movie);
             directorDAO.save(findedDirector);
         }
+        else throw new WatchableNotFoundException("Movie with id = " + movieId + " was not found");
     }
 
     @Override
-    public void addTVShow(Long tvShowId, Long directorId) {
-        Director director= directorDAO.findById(directorId).get();
+    public void addTVShow(Long tvShowId, Long directorId) throws HumanNotFoundException, AlreadyHasValueException {
+
+        if(directorId<=0||directorId==null)
+            throw new IllegalArgumentException("Director's id can't be null or <0");
+        if(tvShowId<=0||tvShowId==null)
+            throw new IllegalArgumentException("TvShow's id can't be null or <0");
+
+        Director findedDirector = findById(directorId);
+        if(findedDirector==null)
+            throw new HumanNotFoundException("Director with id="+directorId+" not found");
+
         Optional<TVShow> opTvShow = tvShowDAO.findById(tvShowId);
 
         if(opTvShow.isPresent()){
             TVShow tvShow=opTvShow.get();
-            director.addTvShow(tvShow);
-            directorDAO.save(director);
+            if(findedDirector.containsTVShow(tvShow))
+                throw new AlreadyHasValueException("This tvShow already directed by this director");
+            findedDirector.addTvShow(tvShow);
+            directorDAO.save(findedDirector);
             tvShowDAO.save(opTvShow.get());
         }else{
             throw new NoSuchElementException("TVShow with id = " + tvShowId + " was not found");
@@ -134,16 +176,26 @@ public class DirectorServiceImpl implements HumanService {
     }
 
     @Override
-    public void addMovie(Long movieId, Long directorId) {
+    public void addMovie(Long movieId, Long directorId) throws HumanNotFoundException, WatchableNotFoundException, AlreadyHasValueException {
+        if(directorId<=0||directorId==null)
+            throw new IllegalArgumentException("Director's id can't be null or <0");
+        if(movieId<=0||movieId==null)
+            throw new IllegalArgumentException("Movie's id can't be null or <0");
+
         Director director= directorDAO.findById(directorId).get();
+        if(director==null)
+            throw new HumanNotFoundException("Director with id="+directorId+" not found");
+
         Optional<Movie> opMovie = movieDAO.findById(movieId);
         if(opMovie.isPresent()){
-            Movie movie=opMovie.get();
+             Movie movie=opMovie.get();
+             if(director.containsMovie(movie))
+                throw new AlreadyHasValueException("This movie already directed by this director");
             director.addMovie(movie);
             directorDAO.save(director);
             movieDAO.save(opMovie.get());
         }else{
-            throw new NoSuchElementException("Movie with id = " + movieId + " was not found");
+            throw new WatchableNotFoundException("Movie with id = " + movieId + " was not found");
         }
     }
 

@@ -14,7 +14,7 @@ public interface WatchableService {
     List<WatchableBaseEntity> findByName(String name);
     void deleteById(Long id) throws WatchableNotFoundException;
     void addActor(Long watchId,Long actorId) throws WatchableNotFoundException, HumanNotFoundException;
-    void addDistributor(Long watchId,Long distributorId) throws WatchableNotFoundException, HumanNotFoundException;
+    void addDistributor(Long watchId,Long distributorId) throws WatchableNotFoundException, HumanNotFoundException, NonHumanNotFoundException;
     void deleteDistributor(Long watchableId, Long distributorId) throws NonHumanNotFoundException, WatchableNotFoundException, AlreadyHasValueException, HasNotValueException;
     void deleteActor(Long watchableId,Long actorId) throws HumanNotFoundException, WatchableNotFoundException, HasNotValueException;
     void removeDirector(Long watchId) throws HasNotValueException, WatchableNotFoundException;

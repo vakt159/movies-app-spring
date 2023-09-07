@@ -73,7 +73,7 @@ public class TVShowServiceImpl implements WatchableService {
     @Override
     public WatchableBaseEntity save(WatchableBaseEntity tvShow) throws WatchableNotFoundException {
         if (tvShow == null)
-            throw new WatchableNotFoundException("TVShow doesn't exist");
+            throw new IllegalArgumentException("TVShow doesn't exist");
         return tvShowDAO.save((TVShow) tvShow);
     }
 
@@ -195,7 +195,7 @@ public class TVShowServiceImpl implements WatchableService {
     }
 
     @Override
-    public void addDistributor(Long watchId, Long distributorId) throws HumanNotFoundException, WatchableNotFoundException {
+    public void addDistributor(Long watchId, Long distributorId) throws HumanNotFoundException, WatchableNotFoundException, NonHumanNotFoundException {
         TVShow origin_tvShow = findById(watchId);
         Distributor distributor = distributorService.findDistributorById(distributorId);
         if (origin_tvShow == null) {
