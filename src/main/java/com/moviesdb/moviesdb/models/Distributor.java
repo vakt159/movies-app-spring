@@ -42,4 +42,12 @@ public class Distributor extends NonHumanBaseEntity {
         this.tvShows.remove(tvShow);
         tvShow.getDistributors().remove(this);
     }
+    public boolean containsTVShow(TVShow tvShow)
+    {
+        return getTvShows().contains(tvShow);
+    }
+    public boolean containsMovie(Movie movie)
+    {
+        return getMovies().contains(movie);
+    }
 }

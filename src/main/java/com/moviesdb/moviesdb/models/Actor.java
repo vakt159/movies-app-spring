@@ -41,5 +41,13 @@ public class Actor extends HumanBaseEntity {
         this.tvShows.remove(tvShow);
         tvShow.getActors().remove(this);
     }
+    public boolean containsTVShow(TVShow tvShow)
+    {
+        return getTvShows().contains(tvShow);
+    }
+    public boolean containsMovie(Movie movie)
+    {
+        return getMovies().contains(movie);
+    }
 
 }

@@ -41,5 +41,13 @@ public class Director extends HumanBaseEntity {
         this.tvShows.remove(tvShow);
         tvShow.setDirector(null);
     }
+    public boolean containsTVShow(TVShow tvShow)
+    {
+        return getTvShows().contains(tvShow);
+    }
+    public boolean containsMovie(Movie movie)
+    {
+        return getMovies().contains(movie);
+    }
 
 }

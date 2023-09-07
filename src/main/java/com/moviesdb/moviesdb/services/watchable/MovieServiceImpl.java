@@ -51,7 +51,7 @@ public class MovieServiceImpl implements WatchableService {
     @Override
     public WatchableBaseEntity save(WatchableBaseEntity movie) throws WatchableNotFoundException {
         if (movie == null)
-            throw new WatchableNotFoundException("Movie can't be null");
+            throw new IllegalArgumentException("Movie can't be null");
         return movieDAO.save((Movie) movie);
     }
 
